@@ -1,0 +1,14 @@
+[package]
+name = "safe-io"
+version = "0.1.0"
+authors = ["majorz"]
+edition = "2018"
+
+[dependencies]
+clap = "3.0.0-beta.1"
+anyhow = "1"
+md-5 = "0.9"
+path-absolutize = "3"
+regex = "1"
+lazy_static = "1"
+tempfile = "3"
