@@ -1,20 +1,19 @@
-use clap::Clap;
-
 use anyhow::{anyhow, Context, Result};
-
-use md5::{Digest, Md5};
-
-use path_absolutize::Absolutize;
-
+use clap::Clap;
+use getrandom::getrandom;
+use itertools::Itertools;
 use lazy_static::lazy_static;
-
+use md5::{Digest, Md5};
+use path_absolutize::Absolutize;
 use regex::Regex;
 
 use std::{
-    fs::{read_to_string, File, OpenOptions},
+    env::temp_dir,
+    fs::{copy, read_to_string, File, OpenOptions},
     io::Write,
     os::unix::fs::OpenOptionsExt,
     path::{Path, PathBuf},
+    process,
 };
 
 #[derive(Clap, Debug)]
@@ -43,11 +42,11 @@ fn main() -> Result<()> {
     let opts: Opts = Opts::parse();
 
     match opts.command {
-        Command::Write(write_args) => write(write_args),
+        Command::Write(write_args) => execute_write(write_args),
     }
 }
 
-fn write(write_args: WriteArgs) -> Result<()> {
+fn execute_write(write_args: WriteArgs) -> Result<()> {
     println!("Path: {:?}", write_args.path);
     println!("Content: {}", write_args.content);
 
@@ -80,10 +79,16 @@ fn create_hashed<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &str) -> R
 
     verify_checksum(&md5sum_path)?;
 
+    let temp_file_path = generate_temp_file_path(&file_name);
+
+    copy(&md5sum_path, &temp_file_path).context("Failed to copy to a temporary location")?;
+
+    fsync_parent_dir(temp_file_path)?;
+
     Ok(())
 }
 
-fn open_file<P: AsRef<Path>>(path: P, mode: Option<u32>) -> Result<File> {
+fn open_with_mode<P: AsRef<Path>>(path: P, mode: Option<u32>) -> Result<File> {
     let mut open_options = OpenOptions::new();
 
     open_options.create(true).write(true);
@@ -104,7 +109,7 @@ fn create_and_sync_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &st
 }
 
 fn create_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &str) -> Result<()> {
-    let mut file = open_file(&path, mode)?;
+    let mut file = open_with_mode(&path, mode)?;
 
     file.write_all(content.as_bytes())?;
     file.sync_all()?;
@@ -144,7 +149,7 @@ fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<()> {
         .context(format!("Failed to read checksum file {:?}", path.as_ref()))?;
 
     let content_hash = md5sum(&content);
-    let file_name_hash = checksum_from_path(path)?;
+    let file_name_hash = extract_checksum_from_path(path)?;
 
     if content_hash != file_name_hash {
         Err(anyhow!(
@@ -157,7 +162,7 @@ fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<()> {
     }
 }
 
-fn checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
+fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
     lazy_static! {
         static ref MD5SUM_FILE_NAME_RE: Regex =
             Regex::new(r"^.*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
@@ -187,4 +192,25 @@ fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
 
 fn md5sum(content: &str) -> String {
     format!("{:x}", Md5::digest(content.as_bytes()))
+}
+
+fn generate_temp_file_path(file_name: &str) -> PathBuf {
+    let mut path = temp_dir();
+    path.push(format!("{}.{}", file_name, get_random_string()));
+    path
+}
+
+fn get_random_string() -> String {
+    format!("{:02x}", get_random_buf().iter().format(""))
+}
+
+fn get_random_buf() -> [u8; 16] {
+    let mut buf = [0u8; 16];
+    if let Ok(()) = getrandom(&mut buf) {
+        buf
+    } else {
+        let process_bytes = process::id().to_be_bytes();
+        buf[..4].clone_from_slice(&process_bytes);
+        buf
+    }
 }
