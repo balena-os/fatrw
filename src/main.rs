@@ -198,8 +198,8 @@ fn generate_temp_file_path(file_name: &str) -> PathBuf {
 fn get_random_string() -> String {
     let mut string = String::new();
     let buf = get_random_buf();
-    for i in 0..buf.len() {
-        string.push_str(&format!("{:02x}", buf[i]));
+    for num in &buf {
+        string.push_str(&format!("{:02x}", num));
     }
     string
 }
