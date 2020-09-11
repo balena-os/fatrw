@@ -6,8 +6,7 @@ use path_absolutize::Absolutize;
 use regex::Regex;
 
 use std::{
-    env::temp_dir,
-    fs::{copy, read_to_string, File, OpenOptions},
+    fs::{copy, read_to_string, remove_file, rename, File, OpenOptions},
     io::Write,
     os::unix::fs::OpenOptionsExt,
     path::{Path, PathBuf},
@@ -46,42 +45,41 @@ fn main() -> Result<()> {
 
 fn execute_write(write_args: WriteArgs) -> Result<()> {
     println!("Path: {:?}", write_args.path);
-    println!("Content: {}", write_args.content);
 
     let mode = mode_from_string(write_args.mode.as_deref())?;
 
-    let abs_path = write_args
-        .path
-        .absolutize()
-        .context(format!("Failed to absolutize {:?}", write_args.path))?;
+    let path = as_absolute(&write_args.path)?;
+    println!("Absolute path: {:?}", path);
 
-    create_hashed(&abs_path, mode, &write_args.content)?;
+    let checksum = md5sum(&write_args.content);
+    println!("MD5 checksum: {}", checksum);
 
-    Ok(())
-}
+    let (md5sum_path, temp_path) = generate_paths(&path, &checksum)?;
 
-fn create_hashed<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &str) -> Result<()> {
-    let hash = md5sum(content);
-    println!("MD5 sum: {}", hash);
-
-    let file_name = get_file_name(&path)?;
-
-    let md5sum_file_name = format!("{}.{}.md5sum", file_name, hash);
-
-    println!("Checksum file name: {}", md5sum_file_name);
-
-    let md5sum_path = path.as_ref().with_file_name(md5sum_file_name);
-
-    create_and_sync_file(&md5sum_path, mode, content)
+    create_file(&md5sum_path, mode, &write_args.content)
         .context(format!("Failed to create checksum file {:?}", md5sum_path))?;
+    println!("Created {:?}", md5sum_path.file_name().unwrap());
+
+    fsync_parent_dir(&path)?;
 
     verify_checksum(&md5sum_path)?;
 
-    let temp_file_path = generate_temp_file_path(&file_name);
+    copy(&md5sum_path, &temp_path).context(format!(
+        "Failed to copy to a temporary location {:?} -> {:?}",
+        md5sum_path, temp_path
+    ))?;
+    println!("Copied {:?} -> {:?}", md5sum_path.file_name().unwrap(), temp_path.file_name().unwrap());
 
-    copy(&md5sum_path, &temp_file_path).context("Failed to copy to a temporary location")?;
+    rename(&temp_path, &path).context(format!(
+        "Failed to rename temporary file to target file {:?} -> {:?}",
+        temp_path, path
+    ))?;
+    println!("Renamed {:?} -> {:?}", temp_path.file_name().unwrap(), path.file_name().unwrap());
 
-    fsync_parent_dir(temp_file_path)?;
+    remove_file(&md5sum_path).context(format!("Failed to remove {:?}", md5sum_path))?;
+    println!("Removed {:?}", md5sum_path.file_name().unwrap());
+
+    fsync_parent_dir(&path)?;
 
     Ok(())
 }
@@ -96,14 +94,6 @@ fn open_with_mode<P: AsRef<Path>>(path: P, mode: Option<u32>) -> Result<File> {
     }
 
     Ok(open_options.open(path)?)
-}
-
-fn create_and_sync_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &str) -> Result<()> {
-    create_file(&path, mode, content)?;
-
-    fsync_parent_dir(&path)?;
-
-    Ok(())
 }
 
 fn create_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &str) -> Result<()> {
@@ -130,38 +120,42 @@ fn parse_file_mode(octal_str: &str) -> Result<u32> {
 }
 
 fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
-    let parent_dir = path.as_ref().parent().context(format!(
+    let path = path.as_ref();
+    let parent_dir = path.parent().context(format!(
         "Cannot evaluate the parent directory of {:?}",
-        path.as_ref()
+        path
     ))?;
 
     let f = File::open(parent_dir).context(format!("Failed to open directory {:?}", parent_dir))?;
     f.sync_all()
         .context(format!("Failed to sync directory {:?}", parent_dir))?;
+    println!("Parent dir synced {:?}", parent_dir);
 
     Ok(())
 }
 
 fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<()> {
-    let content = read_to_string(&path)
-        .context(format!("Failed to read checksum file {:?}", path.as_ref()))?;
+    let path = path.as_ref();
+    let content =
+        read_to_string(&path).context(format!("Failed to read checksum file {:?}", path))?;
 
-    let content_hash = md5sum(&content);
-    let file_name_hash = extract_checksum_from_path(path)?;
+    let content_checksum = md5sum(&content);
+    let file_name_checksum = extract_checksum_from_path(path)?;
 
-    if content_hash != file_name_hash {
+    if content_checksum != file_name_checksum {
         Err(anyhow!(
             "Content and file name checksums do not match {} != {}",
-            content_hash,
-            file_name_hash
+            content_checksum,
+            file_name_checksum
         ))
     } else {
+        println!("Checksum verified");
         Ok(())
     }
 }
 
 fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
-    let filename_re = Regex::new(r"^.*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
+    let filename_re = Regex::new(r"^\..*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
 
     let file_name = get_file_name(path)?;
 
@@ -172,10 +166,10 @@ fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
 }
 
 fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
+    let path = path.as_ref();
     let file_name_os = path
-        .as_ref()
         .file_name()
-        .context(format!("No file name in path {:?}", path.as_ref()))?;
+        .context(format!("No file name in path {:?}", path))?;
 
     let file_name = file_name_os.to_str().context(format!(
         "File name is not a valid UTF-8 string {:?}",
@@ -189,23 +183,36 @@ fn md5sum(content: &str) -> String {
     format!("{:x}", Md5::digest(content.as_bytes()))
 }
 
-fn generate_temp_file_path(file_name: &str) -> PathBuf {
-    let mut path = temp_dir();
-    path.push(format!("{}.{}", file_name, get_random_string()));
-    path
+fn generate_paths<P: AsRef<Path>>(path: P, checksum: &str) -> Result<(PathBuf, PathBuf)> {
+    let path = path.as_ref();
+
+    let random_suffix = generate_random_string();
+
+    let target_name = get_file_name(&path)?;
+
+    let md5sum_name = format!(".{}.{}.{}.md5sum", target_name, random_suffix, checksum);
+    println!("Checksum file name: {}", md5sum_name);
+
+    let temp_name = format!(".{}.{}", target_name, random_suffix);
+    println!("Temp file name: {}", temp_name);
+
+    let md5sum_path = path.with_file_name(md5sum_name);
+    let temp_path = path.with_file_name(temp_name);
+
+    Ok((md5sum_path, temp_path))
 }
 
-fn get_random_string() -> String {
+fn generate_random_string() -> String {
     let mut string = String::new();
-    let buf = get_random_buf();
+    let buf = generate_random_buf();
     for num in &buf {
         string.push_str(&format!("{:02x}", num));
     }
     string
 }
 
-fn get_random_buf() -> [u8; 16] {
-    let mut buf = [0u8; 16];
+fn generate_random_buf() -> [u8; 4] {
+    let mut buf = [0u8; 4];
     if let Ok(()) = getrandom(&mut buf) {
         buf
     } else {
@@ -213,4 +220,11 @@ fn get_random_buf() -> [u8; 16] {
         buf[..4].clone_from_slice(&process_bytes);
         buf
     }
+}
+
+fn as_absolute<P: AsRef<Path>>(path: P) -> Result<PathBuf> {
+    path.as_ref()
+        .absolutize()
+        .context(format!("Failed to absolutize {:?}", path.as_ref()))
+        .map(|p| p.into())
 }
