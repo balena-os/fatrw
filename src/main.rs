@@ -1,8 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Clap;
 use getrandom::getrandom;
-use itertools::Itertools;
-use lazy_static::lazy_static;
 use md5::{Digest, Md5};
 use path_absolutize::Absolutize;
 use regex::Regex;
@@ -163,14 +161,11 @@ fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<()> {
 }
 
 fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
-    lazy_static! {
-        static ref MD5SUM_FILE_NAME_RE: Regex =
-            Regex::new(r"^.*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
-    }
+    let filename_re = Regex::new(r"^.*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
 
     let file_name = get_file_name(path)?;
 
-    MD5SUM_FILE_NAME_RE
+    filename_re
         .captures(&file_name)
         .and_then(|cap| cap.name("hash").map(|hash| hash.as_str().to_string()))
         .context("Cannot capture MD5 checksum from file name")
@@ -201,7 +196,12 @@ fn generate_temp_file_path(file_name: &str) -> PathBuf {
 }
 
 fn get_random_string() -> String {
-    format!("{:02x}", get_random_buf().iter().format(""))
+    let mut string = String::new();
+    let buf = get_random_buf();
+    for i in 0..buf.len() {
+        string.push_str(&format!("{:02x}", buf[i]));
+    }
+    string
 }
 
 fn get_random_buf() -> [u8; 16] {
