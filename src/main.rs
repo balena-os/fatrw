@@ -127,7 +127,7 @@ fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
     Ok(())
 }
 
-fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<()> {
+fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<String> {
     let path = path.as_ref();
     let content =
         read_to_string(&path).context(format!("Failed to read checksum file {:?}", path))?;
@@ -143,7 +143,7 @@ fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<()> {
         ))
     } else {
         println!("Checksum verified");
-        Ok(())
+        Ok(content)
     }
 }
 
@@ -238,37 +238,54 @@ fn execute_read(read_args: ReadArgs) -> Result<()> {
     let path = as_absolute(&read_args.path)?;
     println!("Absolute path: {:?}", path);
 
-    process_md5sums(path)?;
+    let content = if let Some(content) = process_md5sums(&path) {
+        content
+    } else {
+        read_to_string(&path).context(format!("Failed to read target file {:?}", path))?
+    };
+
+    println!("Content: {}", content);
 
     Ok(())
 }
 
-fn process_md5sums<P: AsRef<Path>>(path: P) -> Result<bool> {
-    let file_name = get_file_name(&path)?;
-    let parent = get_parent_as_string(&path)?;
+fn process_md5sums<P: AsRef<Path>>(path: P) -> Option<String> {
+    let file_name = get_file_name(&path).ok()?;
+    let parent = get_parent_as_string(&path).ok()?;
     println!("Parent: {}", parent);
 
     let pattern = format!("{}/.{}.*.*.md5sum", parent, file_name);
     println!("Pattern: {}", pattern);
 
-    for entry in glob(&pattern).context("Failed to read md5sum glob pattern")? {
+    let mut content = None;
+
+    for entry in glob(&pattern).context("Failed to read md5sum glob pattern").ok()? {
         match entry {
             Ok(md5sum_path) => {
-                println!("Found .md5sum file: {}", md5sum_path.display());
-                commit_md5sum_file(md5sum_path, &path)?;
+                if content == None {
+                    println!("Found .md5sum file: {}", md5sum_path.display());
+                    if let Ok(md5sum_content) = commit_md5sum_file(&md5sum_path, &path) {
+                        content = Some(md5sum_content);
+                    }
+                }
+
+                let temp_path = md5sum_path.with_extension("tmp");
+
+                remove_file(&md5sum_path).ok();
+                remove_file(&temp_path).ok();
             }
             Err(e) => println!("{:?}", e),
         }
     }
 
-    Ok(false)
+    content
 }
 
-fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(md5sum_path: P, path: Q) -> Result<()> {
+fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(md5sum_path: P, path: Q) -> Result<String> {
     let md5sum_path = md5sum_path.as_ref();
     let path = path.as_ref();
 
-    verify_checksum(&md5sum_path)?;
+    let content = verify_checksum(&md5sum_path)?;
 
     let temp_path = md5sum_path.with_extension("tmp");
 
@@ -297,5 +314,5 @@ fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(md5sum_path: P, path: Q) -
 
     fsync_parent_dir(&path)?;
 
-    Ok(())
+    Ok(content)
 }
