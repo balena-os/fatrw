@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use clap::Clap;
 use getrandom::getrandom;
+use glob::glob;
 use md5::{Digest, Md5};
 use path_absolutize::Absolutize;
 use regex::Regex;
@@ -25,6 +26,8 @@ struct Opts {
 enum Command {
     #[clap(alias = "w")]
     Write(WriteArgs),
+    #[clap(alias = "r")]
+    Read(ReadArgs),
 }
 
 #[derive(Clap, Debug)]
@@ -35,11 +38,18 @@ struct WriteArgs {
     mode: Option<String>,
 }
 
+#[derive(Clap, Debug)]
+#[clap()]
+struct ReadArgs {
+    path: PathBuf,
+}
+
 fn main() -> Result<()> {
     let opts: Opts = Opts::parse();
 
     match opts.command {
         Command::Write(write_args) => execute_write(write_args),
+        Command::Read(read_args) => execute_read(read_args),
     }
 }
 
@@ -54,7 +64,7 @@ fn execute_write(write_args: WriteArgs) -> Result<()> {
     let checksum = md5sum(&write_args.content);
     println!("MD5 checksum: {}", checksum);
 
-    let (md5sum_path, temp_path) = generate_paths(&path, &checksum)?;
+    let md5sum_path = generate_md5sum_path(&path, &checksum)?;
 
     create_file(&md5sum_path, mode, &write_args.content)
         .context(format!("Failed to create checksum file {:?}", md5sum_path))?;
@@ -62,24 +72,7 @@ fn execute_write(write_args: WriteArgs) -> Result<()> {
 
     fsync_parent_dir(&path)?;
 
-    verify_checksum(&md5sum_path)?;
-
-    copy(&md5sum_path, &temp_path).context(format!(
-        "Failed to copy to a temporary location {:?} -> {:?}",
-        md5sum_path, temp_path
-    ))?;
-    println!("Copied {:?} -> {:?}", md5sum_path.file_name().unwrap(), temp_path.file_name().unwrap());
-
-    rename(&temp_path, &path).context(format!(
-        "Failed to rename temporary file to target file {:?} -> {:?}",
-        temp_path, path
-    ))?;
-    println!("Renamed {:?} -> {:?}", temp_path.file_name().unwrap(), path.file_name().unwrap());
-
-    remove_file(&md5sum_path).context(format!("Failed to remove {:?}", md5sum_path))?;
-    println!("Removed {:?}", md5sum_path.file_name().unwrap());
-
-    fsync_parent_dir(&path)?;
+    commit_md5sum_file(md5sum_path, &path)?;
 
     Ok(())
 }
@@ -179,11 +172,25 @@ fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
     Ok(file_name.to_string())
 }
 
+fn get_parent_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
+    let path = path.as_ref();
+    let parent_os = path
+        .parent()
+        .context(format!("No parent in path {:?}", path))?;
+
+    let parent = parent_os.to_str().context(format!(
+        "Parent is not a valid UTF-8 string {:?}",
+        parent_os
+    ))?;
+
+    Ok(parent.to_string())
+}
+
 fn md5sum(content: &str) -> String {
     format!("{:x}", Md5::digest(content.as_bytes()))
 }
 
-fn generate_paths<P: AsRef<Path>>(path: P, checksum: &str) -> Result<(PathBuf, PathBuf)> {
+fn generate_md5sum_path<P: AsRef<Path>>(path: P, checksum: &str) -> Result<PathBuf> {
     let path = path.as_ref();
 
     let random_suffix = generate_random_string();
@@ -193,13 +200,9 @@ fn generate_paths<P: AsRef<Path>>(path: P, checksum: &str) -> Result<(PathBuf, P
     let md5sum_name = format!(".{}.{}.{}.md5sum", target_name, random_suffix, checksum);
     println!("Checksum file name: {}", md5sum_name);
 
-    let temp_name = format!(".{}.{}", target_name, random_suffix);
-    println!("Temp file name: {}", temp_name);
-
     let md5sum_path = path.with_file_name(md5sum_name);
-    let temp_path = path.with_file_name(temp_name);
 
-    Ok((md5sum_path, temp_path))
+    Ok(md5sum_path)
 }
 
 fn generate_random_string() -> String {
@@ -227,4 +230,72 @@ fn as_absolute<P: AsRef<Path>>(path: P) -> Result<PathBuf> {
         .absolutize()
         .context(format!("Failed to absolutize {:?}", path.as_ref()))
         .map(|p| p.into())
+}
+
+fn execute_read(read_args: ReadArgs) -> Result<()> {
+    println!("Path: {:?}", read_args.path);
+
+    let path = as_absolute(&read_args.path)?;
+    println!("Absolute path: {:?}", path);
+
+    process_md5sums(path)?;
+
+    Ok(())
+}
+
+fn process_md5sums<P: AsRef<Path>>(path: P) -> Result<bool> {
+    let file_name = get_file_name(&path)?;
+    let parent = get_parent_as_string(&path)?;
+    println!("Parent: {}", parent);
+
+    let pattern = format!("{}/.{}.*.*.md5sum", parent, file_name);
+    println!("Pattern: {}", pattern);
+
+    for entry in glob(&pattern).context("Failed to read md5sum glob pattern")? {
+        match entry {
+            Ok(md5sum_path) => {
+                println!("Found .md5sum file: {}", md5sum_path.display());
+                commit_md5sum_file(md5sum_path, &path)?;
+            }
+            Err(e) => println!("{:?}", e),
+        }
+    }
+
+    Ok(false)
+}
+
+fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(md5sum_path: P, path: Q) -> Result<()> {
+    let md5sum_path = md5sum_path.as_ref();
+    let path = path.as_ref();
+
+    verify_checksum(&md5sum_path)?;
+
+    let temp_path = md5sum_path.with_extension("tmp");
+
+    copy(&md5sum_path, &temp_path).context(format!(
+        "Failed to copy to a temporary location {:?} -> {:?}",
+        md5sum_path, temp_path
+    ))?;
+    println!(
+        "Copied {:?} -> {:?}",
+        md5sum_path.file_name().unwrap(),
+        temp_path.file_name().unwrap()
+    );
+
+    rename(&temp_path, &path).context(format!(
+        "Failed to rename temporary file to target file {:?} -> {:?}",
+        temp_path, path
+    ))?;
+    println!(
+        "Renamed {:?} -> {:?}",
+        temp_path.file_name().unwrap(),
+        path.file_name().unwrap()
+    );
+
+    remove_file(&md5sum_path).context(format!("Failed to remove {:?}", md5sum_path))?;
+    println!("Removed {:?}", md5sum_path.file_name().unwrap());
+
+    fsync_parent_dir(&path)?;
+
+    Ok(())
 }
