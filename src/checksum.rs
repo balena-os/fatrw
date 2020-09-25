@@ -1,4 +1,5 @@
 use anyhow::{Context, Result};
+use log::debug;
 use md5::{Digest, Md5};
 use regex::Regex;
 
@@ -30,7 +31,7 @@ pub fn generate_md5sum_path<P: AsRef<Path>>(path: P, checksum: &str) -> Result<P
     let target_name = get_file_name(&path)?;
 
     let md5sum_name = format!(".{}.{}.{}.md5sum", target_name, random_suffix, checksum);
-    println!("Checksum file name: {}", md5sum_name);
+    debug!("Checksum file name: {}", md5sum_name);
 
     let md5sum_path = path.with_file_name(md5sum_name);
 
