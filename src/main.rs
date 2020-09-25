@@ -13,6 +13,8 @@ use crate::read::execute_read;
 use crate::write::execute_write;
 
 fn main() -> Result<()> {
+    env_logger::init();
+
     let opts: Opts = Opts::parse();
 
     match opts.command {
