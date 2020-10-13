@@ -73,6 +73,8 @@ pub fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(
     ))?;
     debug!("Renamed {} -> {}", temp_path.display(), path.display());
 
+    fsync_parent_dir(&path)?;
+
     remove_file(&md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
     debug!("Removed {}", md5sum_path.display());
 
