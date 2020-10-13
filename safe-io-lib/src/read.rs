@@ -6,18 +6,18 @@ use std::fs::{read_to_string, remove_file};
 use std::path::Path;
 
 use crate::fs::{as_absolute, commit_md5sum_file, get_file_name, get_parent_as_string};
-use crate::opts::ReadArgs;
 
-pub fn execute_read(read_args: ReadArgs) -> Result<()> {
-    debug!("Read: {}", read_args.path.display());
+pub fn execute_read<P: AsRef<Path>>(path: P) -> Result<()> {
+    debug!("Read: {}", path.as_ref().display());
 
-    let path = as_absolute(&read_args.path)?;
-    debug!("Absolute: {}", path.display());
+    let abs_path = as_absolute(&path)?;
+    debug!("Absolute: {}", abs_path.display());
 
-    let content = if let Some(content) = process_md5sums(&path) {
+    let content = if let Some(content) = process_md5sums(&abs_path) {
         content
     } else {
-        read_to_string(&path).context(format!("Failed to read target file {}", path.display()))?
+        read_to_string(&abs_path)
+            .context(format!("Failed to read target file {}", abs_path.display()))?
     };
 
     print!("{}", content);
