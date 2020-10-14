@@ -7,7 +7,7 @@ use std::path::Path;
 
 use crate::fs::{as_absolute, commit_md5sum_file, get_file_name, get_parent_as_string};
 
-pub fn execute_read<P: AsRef<Path>>(path: P) -> Result<()> {
+pub fn read_file<P: AsRef<Path>>(path: P) -> Result<String> {
     debug!("Read: {}", path.as_ref().display());
 
     let abs_path = as_absolute(&path)?;
@@ -20,9 +20,7 @@ pub fn execute_read<P: AsRef<Path>>(path: P) -> Result<()> {
             .context(format!("Failed to read target file {}", abs_path.display()))?
     };
 
-    print!("{}", content);
-
-    Ok(())
+    Ok(content)
 }
 
 fn process_md5sums<P: AsRef<Path>>(path: P) -> Option<String> {

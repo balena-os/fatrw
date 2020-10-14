@@ -4,5 +4,5 @@ mod random;
 mod read;
 mod write;
 
-pub use crate::read::execute_read;
-pub use crate::write::execute_write;
+pub use crate::read::read_file;
+pub use crate::write::write_file;
