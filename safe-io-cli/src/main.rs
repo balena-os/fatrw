@@ -21,6 +21,6 @@ fn main() -> Result<()> {
             let content = read_file(&read_args.path)?;
             println!("{}", content);
             Ok(())
-        },
+        }
     }
 }
