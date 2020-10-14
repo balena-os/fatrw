@@ -1,7 +1,7 @@
 use md5::{Digest, Md5};
 use tempfile::TempDir;
 
-use std::fs::File;
+use std::fs::{read_to_string, File};
 use std::io::prelude::*;
 use std::path::Path;
 
@@ -23,7 +23,7 @@ fn read_target_only() {
 }
 
 #[test]
-fn read_target_and_md5sum() {
+fn read_md5sum() {
     let temp_dir = TempDir::new().unwrap();
     let temp = temp_dir.path().to_path_buf();
 
@@ -43,9 +43,12 @@ fn read_target_and_md5sum() {
     let tmp_path = temp.join(&tmp_name);
     create_file(&tmp_path, test_md5sum_content);
 
-    let content = read_file(target).unwrap();
+    let content = read_file(&target).unwrap();
+
+    let committed_content = read_to_string(&target).unwrap();
 
     assert_eq!(test_md5sum_content, content);
+    assert_eq!(committed_content, content);
     assert_eq!(md5sum_path.exists(), false);
     assert_eq!(tmp_path.exists(), false);
 }
