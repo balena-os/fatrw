@@ -53,6 +53,34 @@ fn read_md5sum() {
     assert_eq!(tmp_path.exists(), false);
 }
 
+#[test]
+fn read_multiple_md5sums() {
+    let temp_dir = TempDir::new().unwrap();
+    let temp = temp_dir.path().to_path_buf();
+
+    let test_content = "test md5sum content";
+
+    let checksum = md5sum(test_content);
+
+    let md5sum_name_1 = format!(".test.txt.11111111.{}.md5sum", checksum);
+    let md5sum_path_1 = temp.join(&md5sum_name_1);
+    create_file(&md5sum_path_1, test_content);
+
+    let md5sum_name_2 = format!(".test.txt.22222222.{}.md5sum", checksum);
+    let md5sum_path_2 = temp.join(&md5sum_name_2);
+    create_file(&md5sum_path_2, test_content);
+
+    let target = temp.join("test.txt");
+    let content = read_file(&target).unwrap();
+
+    let committed_content = read_to_string(&target).unwrap();
+
+    assert_eq!(test_content, content);
+    assert_eq!(committed_content, content);
+    assert_eq!(md5sum_path_1.exists(), false);
+    assert_eq!(md5sum_path_2.exists(), false);
+}
+
 fn create_file(path: &Path, content: &str) {
     let mut file = File::create(path).unwrap();
     file.write_all(content.as_bytes()).unwrap();
