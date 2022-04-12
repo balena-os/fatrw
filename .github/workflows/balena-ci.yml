@@ -1,0 +1,23 @@
+name: balenaCloud 
+
+on:
+ pull_request:
+    types: [opened, synchronize, closed]
+    branches:
+      - master
+
+jobs:
+  build-on-balena:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        arch: [aarch64, amd64, armv7hf, i386, rpi]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: balena-io/balena-ci@master
+        name: 'Deploy to balenaCloud'
+        with:
+          balena_token: ${{ secrets.BALENA_TOKEN }}
+          fleet: 'balena_os/${{ matrix.arch }}-safe-io'
+          versionbot: true
