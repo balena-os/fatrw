@@ -5,7 +5,7 @@ use std::fs::{read_to_string, File};
 use std::io::prelude::*;
 use std::path::Path;
 
-use safe_io_lib::*;
+use fatrw::*;
 
 #[test]
 fn read_target_only() {

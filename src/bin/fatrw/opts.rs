@@ -1,14 +1,14 @@
-use clap::Clap;
+use clap::Parser;
 use std::path::PathBuf;
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 #[clap()]
 pub struct Opts {
     #[clap(subcommand)]
     pub command: Command,
 }
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 #[clap()]
 pub enum Command {
     #[clap(alias = "w")]
@@ -17,7 +17,7 @@ pub enum Command {
     Read(ReadArgs),
 }
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 #[clap()]
 pub struct WriteArgs {
     pub path: PathBuf,
@@ -25,7 +25,7 @@ pub struct WriteArgs {
     pub mode: Option<String>,
 }
 
-#[derive(Clap, Debug)]
+#[derive(Parser, Debug)]
 #[clap()]
 pub struct ReadArgs {
     pub path: PathBuf,

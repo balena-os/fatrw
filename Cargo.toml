@@ -1,11 +1,22 @@
-[workspace]
-members = [
-    "safe-io-cli",
-    "safe-io-lib",
-]
+[package]
+name = "fatrw"
+version = "0.1.0"
+authors = ["majorz"]
+description = "fatr"
+license = "Apache-2.0"
+edition = "2021"
 
-[profile.release]
-opt-level = 'z'
-lto = true
-codegen-units = 1
-panic = 'abort'
+[dependencies]
+clap = { version = "3", features = ["derive"] }
+env_logger = "0.7"
+anyhow = "1"
+md-5 = "0.9"
+path-absolutize = "3"
+regex = "1"
+tempfile = "3"
+getrandom = "0.2"
+glob = "0.3"
+log = "0.4"
+
+[dev-dependencies]
+tempfile = "3"
