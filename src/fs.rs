@@ -120,7 +120,7 @@ pub fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
 }
 
 pub fn mode_from_string(mode: Option<&str>) -> Result<Option<u32>> {
-    Ok(if let Some(ref octal_str) = mode {
+    Ok(if let Some(octal_str) = mode {
         let octal_mode = parse_file_mode(octal_str)?;
         debug!("File mode: {:o}", octal_mode);
         Some(octal_mode)
