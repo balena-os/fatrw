@@ -1,10 +1,10 @@
 use anyhow::Result;
-use clap::Clap;
+use clap::Parser;
 
 mod opts;
 
 use crate::opts::{Command, Opts};
-use safe_io_lib::{read_file, write_file};
+use fatrw::{read_file, write_file};
 
 fn main() -> Result<()> {
     env_logger::init();
