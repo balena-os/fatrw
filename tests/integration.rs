@@ -49,8 +49,8 @@ fn read_md5sum() {
 
     assert_eq!(test_md5sum_content, content);
     assert_eq!(committed_content, content);
-    assert_eq!(md5sum_path.exists(), false);
-    assert_eq!(tmp_path.exists(), false);
+    assert!(!md5sum_path.exists());
+    assert!(!tmp_path.exists());
 }
 
 #[test]
@@ -77,8 +77,8 @@ fn read_multiple_md5sums() {
 
     assert_eq!(test_content, content);
     assert_eq!(committed_content, content);
-    assert_eq!(md5sum_path_1.exists(), false);
-    assert_eq!(md5sum_path_2.exists(), false);
+    assert!(!md5sum_path_1.exists());
+    assert!(!md5sum_path_2.exists());
 }
 
 fn create_file(path: &Path, content: &str) {
