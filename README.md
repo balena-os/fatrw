@@ -30,7 +30,11 @@ To write a file:
 ```rust
 import fatrw
 
-fatrw.write_file("/mnt/boot/config.json", "{\"persistentLogging\": true, \"country\": \"US\"}", None);
+fatrw.write_file(
+    "/mnt/boot/config.json",
+    "{\"persistentLogging\": true, \"country\": \"US\"}",
+    None
+);
 ```
 
 To write a file with permissions append those in numeric mode:
@@ -38,7 +42,11 @@ To write a file with permissions append those in numeric mode:
 ```rust
 import fatrw
 
-fatrw.write_file("/mnt/boot/config.json", "{\"persistentLogging\": true, \"country\": \"US\"}", Some("644"));
+fatrw.write_file(
+    "/mnt/boot/config.json",
+    "{\"persistentLogging\": true, \"country\": \"US\"}",
+    Some("644")
+);
 ```
 
 To read a file:
