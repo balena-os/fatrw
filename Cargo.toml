@@ -4,14 +4,15 @@ version = "0.1.0"
 authors = ["majorz"]
 description = "Safe file read and write for FAT filesystems"
 license = "Apache-2.0"
-edition = "2021"
+edition = "2018"
 
 [dependencies]
 clap = { version = "3", features = ["derive"] }
 env_logger = "0.9"
 anyhow = "1"
 md-5 = "0.10"
-path-absolutize = "3"
+path-absolutize = "=3.0.11"
+path-dedot = "=3.0.14"
 regex = "1"
 tempfile = "3"
 getrandom = "0.2"
