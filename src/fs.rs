@@ -13,19 +13,17 @@ pub fn as_absolute<P: AsRef<Path>>(path: P) -> Result<PathBuf> {
     path.as_ref()
         .absolutize()
         .context(format!("Failed to absolutize {}", path.as_ref().display()))
-        .map(|p| p.into())
 }
 
 pub fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
     let path = path.as_ref();
     let file_name_os = path
         .file_name()
-        .context(format!("No file name in path {}", path.display()))?;
+        .ok_or_else(|| anyhow!("No file name in path {}", path.display()))?;
 
-    let file_name = file_name_os.to_str().context(format!(
-        "File name is not a valid UTF-8 string {:?}",
-        file_name_os
-    ))?;
+    let file_name = file_name_os
+        .to_str()
+        .ok_or_else(|| anyhow!("File name is not a valid UTF-8 string {:?}", file_name_os))?;
 
     Ok(file_name.to_string())
 }
@@ -34,12 +32,14 @@ pub fn get_parent_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
     let path = path.as_ref();
     let parent_path = path
         .parent()
-        .context(format!("No parent in path {}", path.display()))?;
+        .ok_or_else(|| anyhow!("No parent in path {}", path.display()))?;
 
-    let parent = parent_path.to_str().context(format!(
-        "Parent is not a valid UTF-8 string {}",
-        parent_path.display()
-    ))?;
+    let parent = parent_path.to_str().ok_or_else(|| {
+        anyhow!(
+            "Parent is not a valid UTF-8 string {}",
+            parent_path.display()
+        )
+    })?;
 
     Ok(parent.to_string())
 }
@@ -105,10 +105,9 @@ pub fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<String> {
 
 pub fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
     let path = path.as_ref();
-    let parent_dir = path.parent().context(format!(
-        "Cannot evaluate the parent directory of {}",
-        path.display()
-    ))?;
+    let parent_dir = path
+        .parent()
+        .ok_or_else(|| anyhow!("Cannot evaluate the parent directory of {}", path.display()))?;
 
     let f = File::open(parent_dir)
         .context(format!("Failed to open directory {}", parent_dir.display()))?;
