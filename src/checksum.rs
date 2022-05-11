@@ -1,4 +1,4 @@
-use anyhow::{Context, Result};
+use anyhow::{anyhow, Result};
 use log::debug;
 use md5::{Digest, Md5};
 use regex::Regex;
@@ -20,7 +20,7 @@ pub fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
     filename_re
         .captures(&file_name)
         .and_then(|cap| cap.name("hash").map(|hash| hash.as_str().to_string()))
-        .context("Cannot capture MD5 checksum from file name")
+        .ok_or_else(|| anyhow!("Cannot capture MD5 checksum from file name"))
 }
 
 pub fn generate_md5sum_path<P: AsRef<Path>>(path: P, checksum: &str) -> Result<PathBuf> {
