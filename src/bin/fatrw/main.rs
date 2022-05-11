@@ -1,5 +1,4 @@
 use anyhow::Result;
-use clap::Parser;
 
 mod opts;
 
@@ -9,7 +8,7 @@ use fatrw::{read_file, write_file};
 fn main() -> Result<()> {
     env_logger::init();
 
-    let opts: Opts = Opts::parse();
+    let opts: Opts = Opts::parse()?;
 
     match opts.command {
         Command::Write(write_args) => write_file(
