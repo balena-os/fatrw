@@ -1,3 +1,5 @@
+#![allow(clippy::option_as_ref_deref)]
+
 use anyhow::Result;
 
 mod opts;
@@ -14,7 +16,7 @@ fn main() -> Result<()> {
         Command::Write(write_args) => write_file(
             &write_args.path,
             &write_args.content,
-            write_args.mode.as_deref(),
+            write_args.mode.as_ref().map(String::as_str),
         ),
         Command::Read(read_args) => {
             let content = read_file(&read_args.path)?;
