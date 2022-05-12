@@ -2,12 +2,12 @@ use anyhow::{Context, Result};
 use glob::glob;
 use log::debug;
 
-use std::fs::{read_to_string, remove_file};
+use std::fs::{read, remove_file};
 use std::path::Path;
 
 use crate::fs::{as_absolute, commit_md5sum_file, get_file_name, get_parent_as_string};
 
-pub fn read_file<P: AsRef<Path>>(path: P) -> Result<String> {
+pub fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
     debug!("Read: {}", path.as_ref().display());
 
     let abs_path = as_absolute(&path)?;
@@ -16,14 +16,13 @@ pub fn read_file<P: AsRef<Path>>(path: P) -> Result<String> {
     let content = if let Some(content) = process_md5sums(&abs_path) {
         content
     } else {
-        read_to_string(&abs_path)
-            .context(format!("Failed to read target file {}", abs_path.display()))?
+        read(&abs_path).context(format!("Failed to read target file {}", abs_path.display()))?
     };
 
     Ok(content)
 }
 
-fn process_md5sums<P: AsRef<Path>>(path: P) -> Option<String> {
+fn process_md5sums<P: AsRef<Path>>(path: P) -> Option<Vec<u8>> {
     let file_name = get_file_name(&path).ok()?;
     let parent = get_parent_as_string(&path).ok()?;
     debug!("Parent directory: {}", parent);
