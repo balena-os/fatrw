@@ -2,7 +2,7 @@
 
 use anyhow::Result;
 
-use std::io::{stdout, Write};
+use std::io::{stdin, stdout, Read, Write};
 
 mod opts;
 
@@ -15,11 +15,15 @@ fn main() -> Result<()> {
     let opts: Opts = Opts::parse()?;
 
     match opts.command {
-        Command::Write(write_args) => write_file(
-            &write_args.path,
-            write_args.content.as_bytes(),
-            write_args.mode.as_ref().map(String::as_str),
-        ),
+        Command::Write(write_args) => {
+            let mut input = Vec::new();
+            stdin().read_to_end(&mut input)?;
+            write_file(
+                &write_args.path,
+                &input,
+                write_args.mode.as_ref().map(String::as_str),
+            )
+        }
         Command::Read(read_args) => {
             let content = read_file(&read_args.path)?;
             stdout().write_all(&content)?;
