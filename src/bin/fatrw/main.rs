@@ -2,6 +2,8 @@
 
 use anyhow::Result;
 
+use std::io::{stdout, Write};
+
 mod opts;
 
 use crate::opts::{Command, Opts};
@@ -15,12 +17,12 @@ fn main() -> Result<()> {
     match opts.command {
         Command::Write(write_args) => write_file(
             &write_args.path,
-            &write_args.content,
+            write_args.content.as_bytes(),
             write_args.mode.as_ref().map(String::as_str),
         ),
         Command::Read(read_args) => {
             let content = read_file(&read_args.path)?;
-            println!("{}", content);
+            stdout().write_all(&content)?;
             Ok(())
         }
     }

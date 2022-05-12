@@ -2,7 +2,7 @@ use anyhow::{anyhow, Context, Result};
 use log::debug;
 use path_absolutize::Absolutize;
 
-use std::fs::{copy, read_to_string, remove_file, rename, File, OpenOptions};
+use std::fs::{copy, read, remove_file, rename, File, OpenOptions};
 use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
 use std::path::{Path, PathBuf};
@@ -47,7 +47,7 @@ pub fn get_parent_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
 pub fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(
     md5sum_path: P,
     path: Q,
-) -> Result<String> {
+) -> Result<Vec<u8>> {
     let md5sum_path = md5sum_path.as_ref();
     let path = path.as_ref();
 
@@ -83,10 +83,10 @@ pub fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(
     Ok(content)
 }
 
-pub fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<String> {
+pub fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
     let path = path.as_ref();
-    let content = read_to_string(&path)
-        .context(format!("Failed to read checksum file {}", path.display()))?;
+    let content =
+        read(&path).context(format!("Failed to read checksum file {}", path.display()))?;
 
     let content_checksum = md5sum(&content);
     let file_name_checksum = extract_checksum_from_path(path)?;
@@ -132,10 +132,10 @@ fn parse_file_mode(octal_str: &str) -> Result<u32> {
     u32::from_str_radix(octal_str, 8).context("Parsing file mode failed")
 }
 
-pub fn create_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &str) -> Result<()> {
+pub fn create_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &[u8]) -> Result<()> {
     let mut file = open_with_mode(&path, mode)?;
 
-    file.write_all(content.as_bytes())?;
+    file.write_all(content)?;
     file.sync_all()?;
 
     debug!("Created: {}", path.as_ref().display());

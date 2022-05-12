@@ -1,7 +1,7 @@
 use md5::{Digest, Md5};
 use tempfile::TempDir;
 
-use std::fs::{read_to_string, File};
+use std::fs::{read, File};
 use std::io::prelude::*;
 use std::path::Path;
 
@@ -12,7 +12,7 @@ fn read_target_only() {
     let temp_dir = TempDir::new().unwrap();
     let temp = temp_dir.path().to_path_buf();
 
-    let test_content = "test content";
+    let test_content = "test content".as_bytes();
 
     let target = temp.join("test.txt");
     create_file(&target, test_content);
@@ -27,8 +27,8 @@ fn read_md5sum() {
     let temp_dir = TempDir::new().unwrap();
     let temp = temp_dir.path().to_path_buf();
 
-    let test_md5sum_content = "test md5sum content";
-    let test_target_content = "test target content";
+    let test_md5sum_content = "test md5sum content".as_bytes();
+    let test_target_content = "test target content".as_bytes();
 
     let target = temp.join("test.txt");
     create_file(&target, test_target_content);
@@ -45,7 +45,7 @@ fn read_md5sum() {
 
     let content = read_file(&target).unwrap();
 
-    let committed_content = read_to_string(&target).unwrap();
+    let committed_content = read(&target).unwrap();
 
     assert_eq!(test_md5sum_content, content);
     assert_eq!(committed_content, content);
@@ -58,7 +58,7 @@ fn read_multiple_md5sums() {
     let temp_dir = TempDir::new().unwrap();
     let temp = temp_dir.path().to_path_buf();
 
-    let test_content = "test md5sum content";
+    let test_content = "test md5sum content".as_bytes();
 
     let checksum = md5sum(test_content);
 
@@ -73,7 +73,7 @@ fn read_multiple_md5sums() {
     let target = temp.join("test.txt");
     let content = read_file(&target).unwrap();
 
-    let committed_content = read_to_string(&target).unwrap();
+    let committed_content = read(&target).unwrap();
 
     assert_eq!(test_content, content);
     assert_eq!(committed_content, content);
@@ -81,12 +81,12 @@ fn read_multiple_md5sums() {
     assert!(!md5sum_path_2.exists());
 }
 
-fn create_file(path: &Path, content: &str) {
+fn create_file(path: &Path, content: &[u8]) {
     let mut file = File::create(path).unwrap();
-    file.write_all(content.as_bytes()).unwrap();
+    file.write_all(content).unwrap();
     file.sync_all().unwrap();
 }
 
-pub fn md5sum(content: &str) -> String {
-    format!("{:x}", Md5::digest(content.as_bytes()))
+pub fn md5sum(content: &[u8]) -> String {
+    format!("{:x}", Md5::digest(content))
 }
