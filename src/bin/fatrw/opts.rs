@@ -14,7 +14,6 @@ pub enum Command {
 
 pub struct WriteArgs {
     pub path: PathBuf,
-    pub content: String,
     pub mode: Option<String>,
 }
 
@@ -32,9 +31,8 @@ impl Opts {
             .subcommand(SubCommand::with_name("read").arg(Arg::with_name("path").required(true)))
             .subcommand(
                 SubCommand::with_name("write")
-                    .arg(Arg::with_name("path").required(true))
-                    .arg(Arg::with_name("content").required(true))
-                    .arg(Arg::with_name("mode")),
+                    .arg(Arg::with_name("mode").short("m").long("mode"))
+                    .arg(Arg::with_name("path").required(true)),
             )
             .get_matches();
 
@@ -44,7 +42,6 @@ impl Opts {
             }),
             ("write", Some(matches)) => Command::Write(WriteArgs {
                 path: path_buf(matches.value_of("path").unwrap()),
-                content: matches.value_of("content").unwrap().to_string(),
                 mode: matches.value_of("mode").map(str::to_string),
             }),
             _ => {
