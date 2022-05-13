@@ -5,12 +5,10 @@ use log::debug;
 use std::path::Path;
 
 use crate::checksum::{generate_md5sum_path, md5sum};
-use crate::fs::{as_absolute, commit_md5sum_file, create_file, fsync_parent_dir, mode_from_string};
+use crate::fs::{as_absolute, commit_md5sum_file, create_file, fsync_parent_dir};
 
-pub fn write_file<P: AsRef<Path>>(path: P, content: &[u8], mode: Option<&str>) -> Result<()> {
+pub fn write_file<P: AsRef<Path>>(path: P, content: &[u8], mode: Option<u32>) -> Result<()> {
     debug!("Write: {} {:?}", path.as_ref().display(), mode);
-
-    let mode = mode_from_string(mode)?;
 
     let abs_path = as_absolute(path)?;
     debug!("Absolute: {}", abs_path.display());
