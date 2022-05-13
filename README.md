@@ -8,19 +8,29 @@ FATRW provides safe file read and write operations that overcome the lack of ato
 
 Please note that the read and write commands have to be always used in conjunction with one another - a file witten by FATRW has to be read with FATRW.
 
-To write a file:
+To write a file use a Unix pipe:
 
-`> fatrw write config.json '{"persistentLogging": true, "country": "US"}'`
+```sh
+$ echo '{"persistentLogging": true' | fatrw write config.json`
+```
 
-To write a file with permissions append those in numeric mode:
+To write a file with permissions set those in numeric mode:
 
-`> fatrw write config.json '{"persistentLogging": true, "country": "US"}' 644`
+```sh
+$ echo '{"persistentLogging": true}' | fatrw write -m 644 config.json
+```
 
 To read a file:
 
+```sh
+$ fatrw read config.json
+{"persistentLogging": true}
 ```
-> fatrw read config.json
-{"persistentLogging": true, "country": "US"}
+
+To copy a file:
+
+```sh
+$ fatrw copy source.json dest.json
 ```
 
 ### Rust library
@@ -30,11 +40,7 @@ To write a file:
 ```rust
 import fatrw
 
-fatrw.write_file(
-    "/mnt/boot/config.json",
-    "{\"persistentLogging\": true, \"country\": \"US\"}",
-    None
-);
+fatrw.write_file("data.txt", "content", None);
 ```
 
 To write a file with permissions append those in numeric mode:
@@ -42,11 +48,7 @@ To write a file with permissions append those in numeric mode:
 ```rust
 import fatrw
 
-fatrw.write_file(
-    "/mnt/boot/config.json",
-    "{\"persistentLogging\": true, \"country\": \"US\"}",
-    Some("644")
-);
+fatrw.write_file("data.txt", "content", Some(644));
 ```
 
 To read a file:
@@ -55,6 +57,14 @@ To read a file:
 import fatrw
 
 let content = fatrw.read_file("/mnt/boot/config.json");
+```
+
+To copy a file:
+
+```rust
+import fatrw
+
+fatrw.copy_file("/mnt/data/source.json", "/mnt/boot/dest.json");
 ```
 
 ### How it works
