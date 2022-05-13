@@ -2,9 +2,10 @@ use anyhow::{anyhow, Context, Result};
 use log::debug;
 use path_absolutize::Absolutize;
 
-use std::fs::{copy, read, remove_file, rename, File, OpenOptions};
+use std::fs::{copy, metadata, read, remove_file, rename, File, OpenOptions};
 use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
+use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 
 use crate::checksum::{extract_checksum_from_path, md5sum};
@@ -26,6 +27,12 @@ pub fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
         .ok_or_else(|| anyhow!("File name is not a valid UTF-8 string {:?}", file_name_os))?;
 
     Ok(file_name.to_string())
+}
+
+pub fn get_file_mode<P: AsRef<Path>>(path: P) -> Result<u32> {
+    let meta = metadata(path)?;
+    let perm = meta.permissions();
+    Ok(perm.mode())
 }
 
 pub fn get_parent_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
@@ -116,20 +123,6 @@ pub fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
     debug!("Dir fsynced {}", parent_dir.display());
 
     Ok(())
-}
-
-pub fn mode_from_string(mode: Option<&str>) -> Result<Option<u32>> {
-    Ok(if let Some(octal_str) = mode {
-        let octal_mode = parse_file_mode(octal_str)?;
-        debug!("File mode: {:o}", octal_mode);
-        Some(octal_mode)
-    } else {
-        None
-    })
-}
-
-fn parse_file_mode(octal_str: &str) -> Result<u32> {
-    u32::from_str_radix(octal_str, 8).context("Parsing file mode failed")
 }
 
 pub fn create_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &[u8]) -> Result<()> {

@@ -1,6 +1,8 @@
 use clap::{App, AppSettings, Arg, SubCommand};
 
-use anyhow::{bail, Result};
+use log::debug;
+
+use anyhow::{bail, Context, Result};
 use std::path::{Path, PathBuf};
 
 pub struct Opts {
@@ -10,15 +12,21 @@ pub struct Opts {
 pub enum Command {
     Write(WriteArgs),
     Read(ReadArgs),
+    Copy(CopyArgs),
 }
 
 pub struct WriteArgs {
     pub path: PathBuf,
-    pub mode: Option<String>,
+    pub mode: Option<u32>,
 }
 
 pub struct ReadArgs {
     pub path: PathBuf,
+}
+
+pub struct CopyArgs {
+    pub source: PathBuf,
+    pub dest: PathBuf,
 }
 
 impl Opts {
@@ -34,6 +42,11 @@ impl Opts {
                     .arg(Arg::with_name("mode").short("m").long("mode"))
                     .arg(Arg::with_name("path").required(true)),
             )
+            .subcommand(
+                SubCommand::with_name("copy")
+                    .arg(Arg::with_name("source").required(true))
+                    .arg(Arg::with_name("dest").required(true)),
+            )
             .get_matches();
 
         let command = match app_matches.subcommand() {
@@ -42,7 +55,11 @@ impl Opts {
             }),
             ("write", Some(matches)) => Command::Write(WriteArgs {
                 path: path_buf(matches.value_of("path").unwrap()),
-                mode: matches.value_of("mode").map(str::to_string),
+                mode: mode_from_string(matches.value_of("mode"))?,
+            }),
+            ("copy", Some(matches)) => Command::Copy(CopyArgs {
+                source: path_buf(matches.value_of("source").unwrap()),
+                dest: path_buf(matches.value_of("dest").unwrap()),
             }),
             _ => {
                 bail!("No subcommand")
@@ -55,4 +72,18 @@ impl Opts {
 
 fn path_buf(path: &str) -> PathBuf {
     Path::new(path).to_path_buf()
+}
+
+pub fn mode_from_string(mode: Option<&str>) -> Result<Option<u32>> {
+    Ok(if let Some(octal_str) = mode {
+        let octal_mode = parse_file_mode(octal_str)?;
+        debug!("File mode: {:o}", octal_mode);
+        Some(octal_mode)
+    } else {
+        None
+    })
+}
+
+fn parse_file_mode(octal_str: &str) -> Result<u32> {
+    u32::from_str_radix(octal_str, 8).context("Parsing file mode failed")
 }
