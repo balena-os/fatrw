@@ -1,23 +1,38 @@
 name: balena 
 
 on:
- pull_request:
+  pull_request:
     types: [opened, synchronize, closed]
     branches:
       - master
+  push:
+    branches:
+      - master
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build-on-balena:
     runs-on: ubuntu-latest
-    strategy:
+    strategy: 
       fail-fast: true
       matrix:
-        arch: [aarch64, amd64, armv7hf, i386, rpi]
+        target: [aarch64-unknown-linux-musl, armv7-unknown-linux-musleabihf, x86_64-unknown-linux-musl]
     steps:
-      - uses: actions/checkout@v2
-      - uses: balena-io/deploy-to-balena-action@master
-        name: 'Build with Balena'
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          balena_token: ${{ secrets.BALENA_TOKEN }}
-          fleet: 'zahari/fatrw-${{ matrix.arch }}'
-          versionbot: true
+          toolchain: stable
+          profile: minimal
+          override: true
+          target: ${{ matrix.target }}
+
+      - name: Build target
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target ${{ matrix.target }}
