@@ -16,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy: 
-      fail-fast: true
       matrix:
         target:
           - aarch64-alpine-linux-musl
