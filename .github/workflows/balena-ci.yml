@@ -18,11 +18,11 @@ jobs:
     strategy: 
       matrix:
         target:
-          - aarch64-alpine-linux-musl
-          - armv7-alpine-linux-musleabihf
-          - armv6-alpine-linux-musleabihf
-          - x86_64-alpine-linux-musl
-          - i586-alpine-linux-musl
+          - aarch64-unknown-linux-musl
+          - armv7-unknown-linux-musleabihf
+          - armv6-unknown-linux-musleabihf
+          - x86_64-unknown-linux-musl
+          - i586-unknown-linux-musl
 
     steps:
       - name: Checkout
