@@ -43,7 +43,19 @@ jobs:
           command: build
           args: --release --target ${{ matrix.target }}
 
-      - name: install strip command
+      - name: List file
         shell: bash
         run: |
-          ls -al ./target/${{ matrix.target }}/release
+          ls -al ./target/${{ matrix.target }}/release/fatrw
+
+      - name: Compress binaries
+        uses: svenstaro/upx-action@v2
+        with:
+          file: ./target/${{ matrix.target }}/release/fatrw
+          args: --best
+          strip: true
+
+      - name: List file #2
+        shell: bash
+        run: |
+          ls -al ./target/${{ matrix.target }}/release/fatrw
