@@ -42,3 +42,8 @@ jobs:
           use-cross: true
           command: build
           args: --release --target ${{ matrix.target }}
+
+      - name: install strip command
+        shell: bash
+        run: |
+          ls -al ./target/${{ matrix.target }}/release
