@@ -43,19 +43,30 @@ jobs:
           command: build
           args: --release --target ${{ matrix.target }}
 
-      - name: List file
+      - name: List file 1
         shell: bash
         run: |
-          ls -al ./target/${{ matrix.target }}/release/fatrw
+          ls -al target/${{ matrix.target }}/release/fatrw
+
+      - name: Install LLVM
+        run: sudo apt-get install -y llvm
+
+      - name: LLVM Strip
+        run: llvm-strip target/${{ matrix.target }}/release/fatrw
+
+      - name: List file 2
+        shell: bash
+        run: |
+          ls -al target/${{ matrix.target }}/release/fatrw
 
       - name: Compress binaries
         uses: svenstaro/upx-action@v2
         with:
-          file: ./target/${{ matrix.target }}/release/fatrw
+          file: target/${{ matrix.target }}/release/fatrw
           args: --best
-          strip: true
+          strip: false
 
-      - name: List file #2
+      - name: List file 3
         shell: bash
         run: |
-          ls -al ./target/${{ matrix.target }}/release/fatrw
+          ls -al target/${{ matrix.target }}/release/fatrw
