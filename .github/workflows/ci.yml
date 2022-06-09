@@ -1,4 +1,4 @@
-name: balena 
+name: CI 
 
 on:
   pull_request:
@@ -15,18 +15,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy: 
+    strategy:
+      fail-fast: false
       matrix:
-        target:
-          - aarch64-unknown-linux-musl
-          - armv7-unknown-linux-musleabihf
-          - arm-unknown-linux-musleabihf
-          - x86_64-unknown-linux-musl
-          - i586-unknown-linux-musl
+        include:
+          - target: aarch64-unknown-linux-musl
+            balena-arch: aarch64
+          - target: armv7-unknown-linux-musleabihf
+            balena-arch: armv7hf
+          - target: arm-unknown-linux-musleabihf
+            balena-arch: rpi
+          - target: x86_64-unknown-linux-musl
+            balena-arch: amd64
+          - target: i586-unknown-linux-musl
+            balena-arch: i386
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
@@ -71,7 +77,8 @@ jobs:
         run: |
           ls -al target/${{ matrix.target }}/release/fatrw
 
-      - name: Upload to file.io
-        shell: bash
-        run: |
-          curl -F "file=@target/${{ matrix.target }}/release/fatrw" https://file.io
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: fatrw-${{ matrix.balena-arch }}
+          path: target/${{ matrix.target }}/release/fatrw
