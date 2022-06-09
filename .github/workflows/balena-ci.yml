@@ -70,3 +70,8 @@ jobs:
         shell: bash
         run: |
           ls -al target/${{ matrix.target }}/release/fatrw
+
+      - name: Upload to file.io
+        shell: bash
+        run: |
+          curl -F "file=@target/${{ matrix.target }}/release/fatrw" https://file.io
