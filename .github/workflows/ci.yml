@@ -65,12 +65,12 @@ jobs:
         run: |
           ls -al target/${{ matrix.target }}/release/fatrw
 
-      - name: Compress binaries
-        uses: svenstaro/upx-action@v2
-        with:
-          file: target/${{ matrix.target }}/release/fatrw
-          args: --best
-          strip: false
+#      - name: Compress binaries
+#        uses: svenstaro/upx-action@v2
+#        with:
+#          file: target/${{ matrix.target }}/release/fatrw
+#          args: --best
+#          strip: false
 
       - name: List file 3
         shell: bash
