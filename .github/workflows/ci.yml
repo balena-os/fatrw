@@ -49,21 +49,11 @@ jobs:
           command: build
           args: --release --target ${{ matrix.target }}
 
-      - name: List file 1
-        shell: bash
-        run: |
-          ls -al target/${{ matrix.target }}/release/fatrw
-
       - name: Install LLVM
         run: sudo apt-get install -y llvm
 
       - name: LLVM strip
         run: llvm-strip target/${{ matrix.target }}/release/fatrw
-
-      - name: List file 2
-        shell: bash
-        run: |
-          ls -al target/${{ matrix.target }}/release/fatrw
 
       - name: Compress
         run: |
@@ -76,7 +66,7 @@ jobs:
           path: fatrw-${{ matrix.balena-arch }}.tar.gz
 
   deploy:
-    # if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/')
     needs: build
     runs-on: ubuntu-latest
 
@@ -84,10 +74,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v3
 
-      - name: List
-        run: ls -alR
-
-#      - name: Release
-#        uses: softprops/action-gh-release@v1
-#        with:
-#          files: ./artifacts/*.tar.gz
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: fatrw/*.tar.gz
