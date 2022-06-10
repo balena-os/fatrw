@@ -9,7 +9,7 @@ on:
     branches:
       - master
     tags:
-      - 'v*.*.*'
+      - v*
 
 jobs:
   build:
@@ -57,22 +57,10 @@ jobs:
       - name: Install LLVM
         run: sudo apt-get install -y llvm
 
-      - name: LLVM Strip
+      - name: LLVM strip
         run: llvm-strip target/${{ matrix.target }}/release/fatrw
 
       - name: List file 2
-        shell: bash
-        run: |
-          ls -al target/${{ matrix.target }}/release/fatrw
-
-#      - name: Compress binaries
-#        uses: svenstaro/upx-action@v2
-#        with:
-#          file: target/${{ matrix.target }}/release/fatrw
-#          args: --best
-#          strip: false
-
-      - name: List file 3
         shell: bash
         run: |
           ls -al target/${{ matrix.target }}/release/fatrw
