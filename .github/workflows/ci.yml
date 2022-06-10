@@ -69,7 +69,25 @@ jobs:
         run: |
           tar -czvf fatrw-${{ matrix.balena-arch }}.tar.gz -C target/${{ matrix.target }}/release fatrw
 
-      - name: Upload
+      - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
+          name: fatrw
           path: fatrw-${{ matrix.balena-arch }}.tar.gz
+
+  deploy:
+    # if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+
+      - name: List
+        run: ls -alR
+
+#      - name: Release
+#        uses: softprops/action-gh-release@v1
+#        with:
+#          files: ./artifacts/*.tar.gz
