@@ -2,12 +2,9 @@ name: CI
 
 on:
   pull_request:
-    types: [opened, synchronize, closed]
     branches:
       - master
   push:
-    branches:
-      - master
     tags:
       - v*
 
