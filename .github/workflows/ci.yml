@@ -65,8 +65,11 @@ jobs:
         run: |
           ls -al target/${{ matrix.target }}/release/fatrw
 
+      - name: Compress
+        run: |
+          tar -czvf fatrw-${{ matrix.balena-arch }}.tar.gz -C target/${{ matrix.target }}/release fatrw
+
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: fatrw-${{ matrix.balena-arch }}
-          path: target/${{ matrix.target }}/release/fatrw
+          path: fatrw-${{ matrix.balena-arch }}.tar.gz
