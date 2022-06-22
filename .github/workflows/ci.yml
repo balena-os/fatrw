@@ -44,17 +44,17 @@ jobs:
         with:
           use-cross: true
           command: build
-          args: --release --target ${{ matrix.target }}
+          args: --profile release-static --target ${{ matrix.target }}
 
       - name: Install LLVM
         run: sudo apt-get install -y llvm
 
       - name: LLVM strip
-        run: llvm-strip target/${{ matrix.target }}/release/fatrw
+        run: llvm-strip target/${{ matrix.target }}/release-static/fatrw
 
       - name: Compress
         run: |
-          tar -czvf fatrw-${{ matrix.balena-arch }}.tar.gz -C target/${{ matrix.target }}/release fatrw
+          tar -czvf fatrw-${{ matrix.balena-arch }}.tar.gz -C target/${{ matrix.target }}/release-static fatrw
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
