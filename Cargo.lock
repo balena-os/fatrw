@@ -118,7 +118,7 @@ dependencies = [
 
 [[package]]
 name = "fatrw"
-version = "0.1.0"
+version = "0.1.7"
 dependencies = [
  "anyhow 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "bitflags 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
