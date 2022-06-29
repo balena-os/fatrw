@@ -27,8 +27,3 @@ default-features = false
 [profile.release]
 opt-level = "z"
 codegen-units = 1
-
-[profile.release-static]
-inherits = "release"
-lto = true
-panic = "abort"
