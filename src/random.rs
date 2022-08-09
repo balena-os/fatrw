@@ -1,3 +1,4 @@
+use std::fmt::Write;
 use std::process;
 
 use getrandom::getrandom;
@@ -6,7 +7,7 @@ pub fn generate_random_string() -> String {
     let mut string = String::new();
     let buf = generate_random_buf();
     for num in &buf {
-        string.push_str(&format!("{:02x}", num));
+        let _ = write!(string, "{:02x}", num);
     }
     string
 }
