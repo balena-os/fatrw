@@ -2,22 +2,21 @@ use anyhow::{anyhow, Context, Result};
 use log::debug;
 use path_absolutize::Absolutize;
 
+use std::borrow::Cow;
 use std::fs::{copy, metadata, read, remove_file, rename, File, OpenOptions};
 use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
 use std::os::unix::fs::PermissionsExt;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use crate::checksum::{extract_checksum_from_path, md5sum};
 
-pub fn as_absolute<P: AsRef<Path>>(path: P) -> Result<PathBuf> {
-    path.as_ref()
-        .absolutize()
-        .context(format!("Failed to absolutize {}", path.as_ref().display()))
+pub fn as_absolute(path: &Path) -> Result<Cow<Path>> {
+    path.absolutize()
+        .context(format!("Failed to absolutize {}", path.display()))
 }
 
-pub fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
-    let path = path.as_ref();
+pub fn get_file_name(path: &Path) -> Result<String> {
     let file_name_os = path
         .file_name()
         .ok_or_else(|| anyhow!("No file name in path {}", path.display()))?;
@@ -29,14 +28,13 @@ pub fn get_file_name<P: AsRef<Path>>(path: P) -> Result<String> {
     Ok(file_name.to_string())
 }
 
-pub fn get_file_mode<P: AsRef<Path>>(path: P) -> Result<u32> {
+pub fn get_file_mode(path: &Path) -> Result<u32> {
     let meta = metadata(path)?;
     let perm = meta.permissions();
     Ok(perm.mode())
 }
 
-pub fn get_parent_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
-    let path = path.as_ref();
+pub fn get_parent_as_string(path: &Path) -> Result<String> {
     let parent_path = path
         .parent()
         .ok_or_else(|| anyhow!("No parent in path {}", path.display()))?;
@@ -51,14 +49,8 @@ pub fn get_parent_as_string<P: AsRef<Path>>(path: P) -> Result<String> {
     Ok(parent.to_string())
 }
 
-pub fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(
-    md5sum_path: P,
-    path: Q,
-) -> Result<Vec<u8>> {
-    let md5sum_path = md5sum_path.as_ref();
-    let path = path.as_ref();
-
-    let content = verify_checksum(&md5sum_path)?;
+pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
+    let content = verify_checksum(md5sum_path)?;
 
     let temp_path = md5sum_path.with_extension("tmp");
 
@@ -80,18 +72,17 @@ pub fn commit_md5sum_file<P: AsRef<Path>, Q: AsRef<Path>>(
     ))?;
     debug!("Renamed {} -> {}", temp_path.display(), path.display());
 
-    fsync_parent_dir(&path)?;
+    fsync_parent_dir(path)?;
 
     remove_file(&md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
     debug!("Removed {}", md5sum_path.display());
 
-    fsync_parent_dir(&path)?;
+    fsync_parent_dir(path)?;
 
     Ok(content)
 }
 
-pub fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
-    let path = path.as_ref();
+pub fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
     let content =
         read(&path).context(format!("Failed to read checksum file {}", path.display()))?;
 
@@ -110,8 +101,7 @@ pub fn verify_checksum<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
     }
 }
 
-pub fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
-    let path = path.as_ref();
+pub fn fsync_parent_dir(path: &Path) -> Result<()> {
     let parent_dir = path
         .parent()
         .ok_or_else(|| anyhow!("Cannot evaluate the parent directory of {}", path.display()))?;
@@ -125,18 +115,18 @@ pub fn fsync_parent_dir<P: AsRef<Path>>(path: P) -> Result<()> {
     Ok(())
 }
 
-pub fn create_file<P: AsRef<Path>>(path: P, mode: Option<u32>, content: &[u8]) -> Result<()> {
-    let mut file = open_with_mode(&path, mode)?;
+pub fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
+    let mut file = open_with_mode(path, mode)?;
 
     file.write_all(content)?;
     file.sync_all()?;
 
-    debug!("Created: {}", path.as_ref().display());
+    debug!("Created: {}", path.display());
 
     Ok(())
 }
 
-fn open_with_mode<P: AsRef<Path>>(path: P, mode: Option<u32>) -> Result<File> {
+fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
     let mut open_options = OpenOptions::new();
 
     open_options.create(true).write(true);
