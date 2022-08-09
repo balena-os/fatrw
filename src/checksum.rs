@@ -12,7 +12,7 @@ pub fn md5sum(content: &[u8]) -> String {
     format!("{:x}", Md5::digest(content))
 }
 
-pub fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
+pub fn extract_checksum_from_path(path: &Path) -> Result<String> {
     let filename_re = Regex::new(r"^\..*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
 
     let file_name = get_file_name(path)?;
@@ -23,12 +23,10 @@ pub fn extract_checksum_from_path<P: AsRef<Path>>(path: P) -> Result<String> {
         .ok_or_else(|| anyhow!("Cannot capture MD5 checksum from file name"))
 }
 
-pub fn generate_md5sum_path<P: AsRef<Path>>(path: P, checksum: &str) -> Result<PathBuf> {
-    let path = path.as_ref();
-
+pub fn generate_md5sum_path(path: &Path, checksum: &str) -> Result<PathBuf> {
     let random_suffix = generate_random_string();
 
-    let target_name = get_file_name(&path)?;
+    let target_name = get_file_name(path)?;
 
     let md5sum_name = format!(".{}.{}.{}.md5sum", target_name, random_suffix, checksum);
     debug!("Checksum file name: {}", md5sum_name);

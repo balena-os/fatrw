@@ -10,7 +10,7 @@ use crate::fs::{as_absolute, commit_md5sum_file, get_file_name, get_parent_as_st
 pub fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
     debug!("Read: {}", path.as_ref().display());
 
-    let abs_path = as_absolute(&path)?;
+    let abs_path = as_absolute(path.as_ref())?;
     debug!("Absolute: {}", abs_path.display());
 
     let content = if let Some(content) = process_md5sums(&abs_path) {
@@ -22,9 +22,9 @@ pub fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
     Ok(content)
 }
 
-fn process_md5sums<P: AsRef<Path>>(path: P) -> Option<Vec<u8>> {
-    let file_name = get_file_name(&path).ok()?;
-    let parent = get_parent_as_string(&path).ok()?;
+fn process_md5sums(path: &Path) -> Option<Vec<u8>> {
+    let file_name = get_file_name(path).ok()?;
+    let parent = get_parent_as_string(path).ok()?;
     debug!("Parent directory: {}", parent);
 
     let pattern = format!("{}/.{}.*.*.md5sum", parent, file_name);
@@ -40,7 +40,7 @@ fn process_md5sums<P: AsRef<Path>>(path: P) -> Option<Vec<u8>> {
             Ok(md5sum_path) => {
                 if content == None {
                     debug!("Found .md5sum file: {}", md5sum_path.display());
-                    if let Ok(md5sum_content) = commit_md5sum_file(&md5sum_path, &path) {
+                    if let Ok(md5sum_content) = commit_md5sum_file(&md5sum_path, path) {
                         debug!("Md5sum file committed");
                         content = Some(md5sum_content);
                     }
