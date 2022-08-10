@@ -60,9 +60,9 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
         temp_path.display()
     ))?;
     debug!(
-        "Copied {} -> {}",
-        md5sum_path.display(),
-        temp_path.display()
+        "Copied {} {}",
+        file_name_display(md5sum_path),
+        file_name_display(&temp_path)
     );
 
     rename(&temp_path, &path).context(format!(
@@ -70,12 +70,16 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
         temp_path.display(),
         path.display()
     ))?;
-    debug!("Renamed {} -> {}", temp_path.display(), path.display());
+    debug!(
+        "Renamed {} {}",
+        file_name_display(&temp_path),
+        file_name_display(path)
+    );
 
     fsync_parent_dir(path)?;
 
     remove_file(&md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
-    debug!("Removed {}", md5sum_path.display());
+    debug!("Removed {}", file_name_display(md5sum_path));
 
     fsync_parent_dir(path)?;
 
@@ -121,7 +125,7 @@ pub fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()>
     file.write_all(content)?;
     file.sync_all()?;
 
-    debug!("Created: {}", path.display());
+    debug!("Created {}", file_name_display(path));
 
     Ok(())
 }
@@ -136,4 +140,8 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
     }
 
     Ok(open_options.open(path)?)
+}
+
+pub fn file_name_display(path: &Path) -> Cow<str> {
+    path.file_name().unwrap_or_default().to_string_lossy()
 }
