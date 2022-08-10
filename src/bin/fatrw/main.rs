@@ -8,7 +8,10 @@ use crate::opts::{Command, Opts};
 use fatrw::{copy_file, read_file, write_file};
 
 fn main() -> Result<()> {
-    env_logger::init();
+    env_logger::builder()
+        .format_timestamp(None)
+        .format_target(false)
+        .init();
 
     let opts: Opts = Opts::parse()?;
 
