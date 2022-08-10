@@ -1,6 +1,6 @@
 [package]
 name = "fatrw"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["majorz"]
 description = "Safe file read and write for FAT filesystems"
 license = "Apache-2.0"
