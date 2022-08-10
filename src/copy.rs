@@ -10,7 +10,7 @@ use crate::write::write_file;
 
 pub fn copy_file<P: AsRef<Path>, Q: AsRef<Path>>(source: P, dest: Q) -> Result<()> {
     debug!(
-        "Copy: {} {}",
+        "Copy {} {}",
         source.as_ref().display(),
         dest.as_ref().display()
     );

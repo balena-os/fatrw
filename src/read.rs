@@ -5,13 +5,15 @@ use log::debug;
 use std::fs::{read, remove_file};
 use std::path::Path;
 
-use crate::fs::{as_absolute, commit_md5sum_file, get_file_name, get_parent_as_string};
+use crate::fs::{
+    as_absolute, commit_md5sum_file, file_name_display, get_file_name, get_parent_as_string,
+};
 
 pub fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
-    debug!("Read: {}", path.as_ref().display());
+    debug!("Read {}", path.as_ref().display());
 
     let abs_path = as_absolute(path.as_ref())?;
-    debug!("Absolute: {}", abs_path.display());
+    debug!("Absolute {}", abs_path.display());
 
     let content = if let Some(content) = process_md5sums(&abs_path) {
         content
@@ -25,10 +27,10 @@ pub fn read_file<P: AsRef<Path>>(path: P) -> Result<Vec<u8>> {
 fn process_md5sums(path: &Path) -> Option<Vec<u8>> {
     let file_name = get_file_name(path).ok()?;
     let parent = get_parent_as_string(path).ok()?;
-    debug!("Parent directory: {}", parent);
+    debug!("Parent directory {}", parent);
 
     let pattern = format!("{}/.{}.*.*.md5sum", parent, file_name);
-    debug!("Glob pattern: {}", pattern);
+    debug!("Glob pattern {}", pattern);
 
     let mut content = None;
 
@@ -39,7 +41,7 @@ fn process_md5sums(path: &Path) -> Option<Vec<u8>> {
         match entry {
             Ok(md5sum_path) => {
                 if content == None {
-                    debug!("Found .md5sum file: {}", md5sum_path.display());
+                    debug!("Found .md5sum file {}", file_name_display(&md5sum_path));
                     if let Ok(md5sum_content) = commit_md5sum_file(&md5sum_path, path) {
                         debug!("Md5sum file committed");
                         content = Some(md5sum_content);
