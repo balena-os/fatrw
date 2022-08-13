@@ -1,11 +1,14 @@
 use anyhow::Result;
 
+use clap::Parser;
+
 use std::io::{stdin, stdout, Read, Write};
 
-mod opts;
+mod cli;
 
-use crate::opts::{Command, Opts};
 use fatrw::{copy_file, read_file, write_file};
+
+use crate::cli::{mode_from_string, Cli, Command};
 
 fn main() -> Result<()> {
     env_logger::builder()
@@ -13,19 +16,19 @@ fn main() -> Result<()> {
         .format_target(false)
         .init();
 
-    let opts: Opts = Opts::parse()?;
+    let args = Cli::parse();
 
-    match opts.command {
-        Command::Write(write_args) => {
+    match args.command {
+        Command::Write { path, mode } => {
             let mut input = Vec::new();
             stdin().read_to_end(&mut input)?;
-            write_file(&write_args.path, &input, write_args.mode)
+            write_file(&path, &input, mode_from_string(&mode)?)
         }
-        Command::Read(read_args) => {
-            let content = read_file(&read_args.path)?;
+        Command::Read { path } => {
+            let content = read_file(&path)?;
             stdout().write_all(&content)?;
             Ok(())
         }
-        Command::Copy(copy_args) => copy_file(&copy_args.source, &copy_args.dest),
+        Command::Copy { source, dest } => copy_file(&source, &dest),
     }
 }
