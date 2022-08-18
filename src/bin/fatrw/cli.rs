@@ -11,6 +11,10 @@ use std::path::PathBuf;
 pub struct Cli {
     #[clap(subcommand)]
     pub command: Command,
+
+    /// Print debug information
+    #[clap(short, long)]
+    pub debug: bool,
 }
 
 #[derive(Debug, Subcommand)]

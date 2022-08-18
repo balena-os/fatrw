@@ -11,14 +11,11 @@ use fatrw::{copy_file, read_file, write_file};
 use crate::cli::{mode_from_string, Cli, Command};
 
 fn main() -> Result<()> {
-    env_logger::builder()
-        .format_timestamp(None)
-        .format_target(false)
-        .init();
+    let cli = Cli::parse();
 
-    let args = Cli::parse();
+    init_logging(&cli);
 
-    match args.command {
+    match cli.command {
         Command::Write { path, mode } => {
             let mut input = Vec::new();
             stdin().read_to_end(&mut input)?;
@@ -31,4 +28,17 @@ fn main() -> Result<()> {
         }
         Command::Copy { source, dest } => copy_file(&source, &dest),
     }
+}
+
+fn init_logging(cli: &Cli) {
+    let mut builder = env_logger::builder();
+
+    builder.format_timestamp(None);
+    builder.format_target(false);
+
+    if cli.debug {
+        builder.filter_level(log::LevelFilter::Debug);
+    }
+
+    builder.init();
 }
