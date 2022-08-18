@@ -3,6 +3,7 @@ name = "fatrw"
 version = "0.2.5"
 authors = ["majorz"]
 description = "Safe file read and write for FAT filesystems"
+repository = "https://github.com/balena-os/fatrw/"
 license = "Apache-2.0"
 edition = "2018"
 
