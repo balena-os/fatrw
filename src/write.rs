@@ -8,7 +8,11 @@ use crate::checksum::{generate_md5sum_path, md5sum};
 use crate::fs::{as_absolute, commit_md5sum_file, create_file, fsync_parent_dir};
 
 pub fn write_file<P: AsRef<Path>>(path: P, content: &[u8], mode: Option<u32>) -> Result<()> {
-    debug!("Write {} {:?}", path.as_ref().display(), mode);
+    debug!("Write {}", path.as_ref().display());
+
+    if let Some(m) = mode {
+        debug!("Mode {:o}", m);
+    }
 
     let abs_path = as_absolute(path.as_ref())?;
     debug!("Absolute {}", abs_path.display());
