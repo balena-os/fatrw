@@ -1,7 +1,7 @@
 [package]
 name = "fatrw"
 version = "0.2.6"
-authors = ["majorz"]
+authors = ["Zahari Petkov <zahari@balena.io>"]
 description = "Safe file read and write for FAT filesystems"
 repository = "https://github.com/balena-os/fatrw/"
 license = "Apache-2.0"
