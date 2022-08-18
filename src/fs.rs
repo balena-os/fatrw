@@ -50,6 +50,8 @@ pub fn get_parent_as_string(path: &Path) -> Result<String> {
 }
 
 pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
+    debug!("Committing checksum file");
+
     let content = verify_checksum(md5sum_path)?;
 
     let temp_path = md5sum_path.with_extension("tmp");
