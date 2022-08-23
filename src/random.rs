@@ -14,11 +14,9 @@ pub fn generate_random_string() -> String {
 
 fn generate_random_buf() -> [u8; 4] {
     let mut buf = [0_u8; 4];
-    if let Ok(()) = getrandom(&mut buf) {
-        buf
-    } else {
+    if getrandom(&mut buf).is_err() {
         let process_bytes = process::id().to_be_bytes();
         buf[..4].clone_from_slice(&process_bytes);
-        buf
     }
+    buf
 }
