@@ -11,12 +11,12 @@ use std::path::Path;
 
 use crate::checksum::{extract_checksum_from_path, md5sum};
 
-pub fn as_absolute(path: &Path) -> Result<Cow<'_, Path>> {
+pub(crate) fn as_absolute(path: &Path) -> Result<Cow<'_, Path>> {
     path.absolutize()
         .context(format!("Failed to absolutize {}", path.display()))
 }
 
-pub fn get_file_name(path: &Path) -> Result<String> {
+pub(crate) fn get_file_name(path: &Path) -> Result<String> {
     let file_name_os = path
         .file_name()
         .ok_or_else(|| anyhow!("No file name in path {}", path.display()))?;
@@ -28,13 +28,13 @@ pub fn get_file_name(path: &Path) -> Result<String> {
     Ok(file_name.to_string())
 }
 
-pub fn get_file_mode(path: &Path) -> Result<u32> {
+pub(crate) fn get_file_mode(path: &Path) -> Result<u32> {
     let meta = metadata(path)?;
     let perm = meta.permissions();
     Ok(perm.mode())
 }
 
-pub fn get_parent_as_string(path: &Path) -> Result<String> {
+pub(crate) fn get_parent_as_string(path: &Path) -> Result<String> {
     let parent_path = path
         .parent()
         .ok_or_else(|| anyhow!("No parent in path {}", path.display()))?;
@@ -49,7 +49,7 @@ pub fn get_parent_as_string(path: &Path) -> Result<String> {
     Ok(parent.to_string())
 }
 
-pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
+pub(crate) fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
     debug!("Committing checksum file");
 
     let content = verify_checksum(md5sum_path)?;
@@ -88,7 +88,7 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
     Ok(content)
 }
 
-pub fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
+pub(crate) fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
     let content =
         read(&path).context(format!("Failed to read checksum file {}", path.display()))?;
 
@@ -107,7 +107,7 @@ pub fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
     }
 }
 
-pub fn fsync_parent_dir(path: &Path) -> Result<()> {
+pub(crate) fn fsync_parent_dir(path: &Path) -> Result<()> {
     let parent_dir = path
         .parent()
         .ok_or_else(|| anyhow!("Cannot evaluate the parent directory of {}", path.display()))?;
@@ -121,7 +121,7 @@ pub fn fsync_parent_dir(path: &Path) -> Result<()> {
     Ok(())
 }
 
-pub fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
+pub(crate) fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
     let mut file = open_with_mode(path, mode)?;
 
     file.write_all(content)?;
@@ -144,6 +144,6 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
     Ok(open_options.open(path)?)
 }
 
-pub fn file_name_display(path: &Path) -> Cow<'_, str> {
+pub(crate) fn file_name_display(path: &Path) -> Cow<'_, str> {
     path.file_name().unwrap_or_default().to_string_lossy()
 }

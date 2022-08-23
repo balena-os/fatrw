@@ -8,7 +8,7 @@ use std::path::{Path, PathBuf};
 use crate::fs::get_file_name;
 use crate::random::generate_random_string;
 
-pub fn md5sum(content: &[u8]) -> String {
+pub(crate) fn md5sum(content: &[u8]) -> String {
     format!("{:x}", Md5::digest(content))
 }
 

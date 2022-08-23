@@ -6,7 +6,9 @@ use std::io::{stdin, stdout, Read, Write};
 
 mod cli;
 
-use fatrw::{copy_file, read_file, write_file};
+use fatrw::copy::copy_file;
+use fatrw::read::read_file;
+use fatrw::write::write_file;
 
 use crate::cli::{mode_from_string, Cli, Command};
 

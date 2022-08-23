@@ -41,7 +41,7 @@ pub enum Command {
     },
 }
 
-pub fn mode_from_string(mode: &Option<String>) -> Result<Option<u32>> {
+pub(crate) fn mode_from_string(mode: &Option<String>) -> Result<Option<u32>> {
     Ok(if let Some(octal_str) = mode {
         let octal_mode = parse_file_mode(octal_str)?;
         Some(octal_mode)
