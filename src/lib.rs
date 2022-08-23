@@ -21,7 +21,8 @@
     clippy::mod_module_files,
     clippy::expect_used,
     clippy::missing_inline_in_public_items,
-    clippy::module_name_repetitions
+    clippy::module_name_repetitions,
+    clippy::blanket_clippy_restriction_lints
 )]
 
 mod checksum;
