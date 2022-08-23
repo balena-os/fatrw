@@ -11,7 +11,7 @@ use std::path::Path;
 
 use crate::checksum::{extract_checksum_from_path, md5sum};
 
-pub fn as_absolute(path: &Path) -> Result<Cow<Path>> {
+pub fn as_absolute(path: &Path) -> Result<Cow<'_, Path>> {
     path.absolutize()
         .context(format!("Failed to absolutize {}", path.display()))
 }
@@ -144,6 +144,6 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
     Ok(open_options.open(path)?)
 }
 
-pub fn file_name_display(path: &Path) -> Cow<str> {
+pub fn file_name_display(path: &Path) -> Cow<'_, str> {
     path.file_name().unwrap_or_default().to_string_lossy()
 }
