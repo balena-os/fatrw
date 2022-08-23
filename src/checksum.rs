@@ -20,7 +20,7 @@ pub fn extract_checksum_from_path(path: &Path) -> Result<String> {
 
     filename_re
         .captures(&file_name)
-        .and_then(|cap| cap.name("hash").map(|hash| hash.as_str().to_string()))
+        .and_then(|cap| cap.name("hash").map(|hash| hash.as_str().to_owned()))
         .ok_or_else(|| anyhow!("Cannot capture MD5 checksum from file name"))
 }
 

@@ -25,7 +25,7 @@ pub fn get_file_name(path: &Path) -> Result<String> {
         .to_str()
         .ok_or_else(|| anyhow!("File name is not a valid UTF-8 string {:?}", file_name_os))?;
 
-    Ok(file_name.to_string())
+    Ok(file_name.to_owned())
 }
 
 pub fn get_file_mode(path: &Path) -> Result<u32> {
@@ -46,7 +46,7 @@ pub fn get_parent_as_string(path: &Path) -> Result<String> {
         )
     })?;
 
-    Ok(parent.to_string())
+    Ok(parent.to_owned())
 }
 
 pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
