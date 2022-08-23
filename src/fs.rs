@@ -95,15 +95,15 @@ pub fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
     let content_checksum = md5sum(&content);
     let file_name_checksum = extract_checksum_from_path(path)?;
 
-    if content_checksum != file_name_checksum {
+    if content_checksum == file_name_checksum {
+        debug!("Checksum verified");
+        Ok(content)
+    } else {
         Err(anyhow!(
             "Content and file name checksums do not match {} != {}",
             content_checksum,
             file_name_checksum
         ))
-    } else {
-        debug!("Checksum verified");
-        Ok(content)
     }
 }
 
