@@ -15,6 +15,7 @@
 )]
 #![allow(
     clippy::missing_docs_in_private_items,
+    clippy::missing_errors_doc,
     clippy::separated_literal_suffix,
     clippy::implicit_return,
     clippy::mod_module_files,
