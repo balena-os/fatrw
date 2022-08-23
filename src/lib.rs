@@ -19,7 +19,8 @@
     clippy::separated_literal_suffix,
     clippy::implicit_return,
     clippy::mod_module_files,
-    clippy::expect_used
+    clippy::expect_used,
+    clippy::missing_inline_in_public_items
 )]
 
 mod checksum;
