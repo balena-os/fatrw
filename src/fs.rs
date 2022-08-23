@@ -11,7 +11,7 @@ use std::path::Path;
 
 use crate::checksum::{extract_checksum_from_path, md5sum};
 
-pub fn as_absolute(path: &Path) -> Result<Cow<Path>> {
+pub fn as_absolute(path: &Path) -> Result<Cow<'_, Path>> {
     path.absolutize()
         .context(format!("Failed to absolutize {}", path.display()))
 }
@@ -25,7 +25,7 @@ pub fn get_file_name(path: &Path) -> Result<String> {
         .to_str()
         .ok_or_else(|| anyhow!("File name is not a valid UTF-8 string {:?}", file_name_os))?;
 
-    Ok(file_name.to_string())
+    Ok(file_name.to_owned())
 }
 
 pub fn get_file_mode(path: &Path) -> Result<u32> {
@@ -46,7 +46,7 @@ pub fn get_parent_as_string(path: &Path) -> Result<String> {
         )
     })?;
 
-    Ok(parent.to_string())
+    Ok(parent.to_owned())
 }
 
 pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
@@ -95,15 +95,15 @@ pub fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
     let content_checksum = md5sum(&content);
     let file_name_checksum = extract_checksum_from_path(path)?;
 
-    if content_checksum != file_name_checksum {
+    if content_checksum == file_name_checksum {
+        debug!("Checksum verified");
+        Ok(content)
+    } else {
         Err(anyhow!(
             "Content and file name checksums do not match {} != {}",
             content_checksum,
             file_name_checksum
         ))
-    } else {
-        debug!("Checksum verified");
-        Ok(content)
     }
 }
 
@@ -144,6 +144,6 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
     Ok(open_options.open(path)?)
 }
 
-pub fn file_name_display(path: &Path) -> Cow<str> {
+pub fn file_name_display(path: &Path) -> Cow<'_, str> {
     path.file_name().unwrap_or_default().to_string_lossy()
 }

@@ -5,6 +5,8 @@ authors = ["Zahari Petkov <zahari@balena.io>"]
 description = "Safe file read and write for FAT filesystems"
 repository = "https://github.com/balena-os/fatrw/"
 license = "Apache-2.0"
+keywords = ["fat32", "fat16", "fs", "file", "filesystem", "safe-io"]
+categories = ["filesystem", "os"]
 edition = "2021"
 
 [dependencies]

@@ -5,7 +5,7 @@ use std::fs::{read, File};
 use std::io::prelude::*;
 use std::path::Path;
 
-use fatrw::*;
+use fatrw::read::read_file;
 
 #[test]
 fn read_target_only() {
@@ -87,6 +87,6 @@ fn create_file(path: &Path, content: &[u8]) {
     file.sync_all().unwrap();
 }
 
-pub fn md5sum(content: &[u8]) -> String {
+fn md5sum(content: &[u8]) -> String {
     format!("{:x}", Md5::digest(content))
 }
