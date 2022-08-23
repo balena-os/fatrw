@@ -17,7 +17,8 @@
     clippy::missing_docs_in_private_items,
     clippy::separated_literal_suffix,
     clippy::implicit_return,
-    clippy::mod_module_files
+    clippy::mod_module_files,
+    clippy::expect_used
 )]
 
 mod checksum;

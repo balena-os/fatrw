@@ -13,7 +13,8 @@ pub fn md5sum(content: &[u8]) -> String {
 }
 
 pub fn extract_checksum_from_path(path: &Path) -> Result<String> {
-    let filename_re = Regex::new(r"^\..*\.(?P<hash>[0-9a-f]{32}).md5sum$").unwrap();
+    let filename_re =
+        Regex::new(r"^\..*\.(?P<hash>[0-9a-f]{32}).md5sum$").expect("Error in md5sum file Regex");
 
     let file_name = get_file_name(path)?;
 
