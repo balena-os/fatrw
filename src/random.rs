@@ -13,7 +13,7 @@ pub fn generate_random_string() -> String {
 }
 
 fn generate_random_buf() -> [u8; 4] {
-    let mut buf = [0u8; 4];
+    let mut buf = [0_u8; 4];
     if let Ok(()) = getrandom(&mut buf) {
         buf
     } else {
