@@ -40,7 +40,7 @@ fn process_md5sums(path: &Path) -> Option<Vec<u8>> {
     {
         match entry {
             Ok(md5sum_path) => {
-                if content == None {
+                if content.is_none() {
                     debug!("Found .md5sum file {}", file_name_display(&md5sum_path));
                     if let Ok(md5sum_content) = commit_md5sum_file(&md5sum_path, path) {
                         debug!("Md5sum file committed");
