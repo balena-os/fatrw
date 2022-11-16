@@ -37,12 +37,11 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
 
+      - name: Install Cross
+        run: cargo install cross
+
       - name: Build target
-        uses: actions-rs/cargo@v1
-        with:
-          use-cross: true
-          command: build
-          args: --profile release --target ${{ matrix.target }}
+        run: cross build --profile release --target ${{ matrix.target }}
 
       - name: Install LLVM
         run: sudo apt-get install -y llvm
