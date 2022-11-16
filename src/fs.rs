@@ -2,7 +2,7 @@ use anyhow::{anyhow, Context, Result};
 use log::debug;
 use path_absolutize::Absolutize;
 
-use std::borrow::Cow;
+use alloc::borrow::Cow;
 use std::fs::{copy, metadata, read, remove_file, rename, File, OpenOptions};
 use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
@@ -56,7 +56,7 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
 
     let temp_path = md5sum_path.with_extension("tmp");
 
-    copy(&md5sum_path, &temp_path).context(format!(
+    copy(md5sum_path, &temp_path).context(format!(
         "Failed to copy to a temporary location {} -> {}",
         md5sum_path.display(),
         temp_path.display()
@@ -67,7 +67,7 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
         file_name_display(&temp_path)
     );
 
-    rename(&temp_path, &path).context(format!(
+    rename(&temp_path, path).context(format!(
         "Failed to rename temporary file to target file {} -> {}",
         temp_path.display(),
         path.display()
@@ -80,7 +80,7 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
 
     fsync_parent_dir(path)?;
 
-    remove_file(&md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
+    remove_file(md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
     debug!("Removed {}", file_name_display(md5sum_path));
 
     fsync_parent_dir(path)?;
@@ -89,8 +89,7 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
 }
 
 pub fn verify_checksum(path: &Path) -> Result<Vec<u8>> {
-    let content =
-        read(&path).context(format!("Failed to read checksum file {}", path.display()))?;
+    let content = read(path).context(format!("Failed to read checksum file {}", path.display()))?;
 
     let content_checksum = md5sum(&content);
     let file_name_checksum = extract_checksum_from_path(path)?;

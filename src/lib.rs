@@ -25,6 +25,8 @@
     clippy::blanket_clippy_restriction_lints
 )]
 
+extern crate alloc;
+
 mod checksum;
 pub mod copy;
 mod fs;
