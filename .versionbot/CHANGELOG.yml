@@ -1,0 +1,1003 @@
+- commits:
+    - subject: Use flowzone instead of custom CI configuration
+      hash: 468a61f25a259549126ab6deceae853e76d8917d
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+  version: 0.2.14
+  title: ""
+  date: 2022-11-18T17:46:55.938Z
+- version: 0.2.13
+  date: 2022-11-16T15:43:53Z
+  commits:
+    - hash: ad684aa5b0945f91cec59f113fee03181cb985db
+      author: Zahari Petkov
+      footers:
+        change-type: patch
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      subject: Switch to rust-toolchain@master
+      body: As shown in action's examples.
+- version: 0.2.12
+- date: 2022-11-16T13:18:33Z
+- commits:
+    - hash: b882fc37b71b92e9de571a7e424d6898456082b0
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Replace actions-rs/cargo build with direct cross usage
+- commits:
+    - body: null
+- version: 0.2.11
+- date: 2022-11-16T11:33:35Z
+- commits:
+    - hash: e582834b03b14768ed6978e32239105aa96db38c
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Switch CI to dtolnay/rust-toolchain
+- commits:
+    - body: Current actions-rs/toolchain is not actively maintained.
+- version: 0.2.10
+- date: 2022-11-16T10:37:39Z
+- commits:
+    - hash: e79a6630f4b7fa6579bf1e8ae87dac8a3df7e479
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Fix clippy lints on Rust v1.65
+- commits:
+    - body: null
+- version: 0.2.9
+- date: 2022-08-23T13:49:45Z
+- commits:
+    - hash: 1ef2a86650258c3a306b92eb295b932002cb790a
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Enable verbose clippy warnings
+- commits:
+    - body: null
+- commits:
+    - hash: 553d369a77835fbef43baf4052796b992f18b718
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Reveal hidden lifetime parameters
+- commits:
+    - body: null
+- commits:
+    - hash: f881a53be7b0f0dad4d4c8611856e50081f03f2b
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Rework function public exposure
+- commits:
+    - body: null
+- commits:
+    - hash: c1950e9090ebfc6bb842dd4ca1fb34eedd83931e
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Allow a number of fine-grained clippy lints
+- commits:
+    - body: null
+- commits:
+    - hash: 123d8a4a1f7c955ca0489c197bab791ea4c1bac3
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Separate integer type suffix by an underscore
+- commits:
+    - body: null
+- commits:
+    - hash: 5c15a84d1b0cf86f4f045b6d4469e76fcf24f48e
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Add categories and keywords in Cargo.toml
+- commits:
+    - body: null
+- commits:
+    - hash: 16ce8b38852529fb5f87665aac5ee18e6db2efcf
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Remove redundant pub crate definitions
+- commits:
+    - body: null
+- commits:
+    - hash: 824bd5a976b29d4fe3534eb6afdff45f5127f45b
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use `expect` in md5sum file Regex creation
+- commits:
+    - body: null
+- commits:
+    - hash: 44f51c89651a2c8d259e5e43de2b9dc2448aa893
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Convert .to_string into .to_owned
+- commits:
+    - body: null
+- commits:
+    - hash: 43792e1f1f0cde70a48cbfbcb4b6b96e44211adf
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Allow clippy::missing_errors_doc
+- commits:
+    - body: null
+- commits:
+    - hash: 320480fdac839f89a7bc5a24feb60e9739aeeee4
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Allow clippy::missing_inline_in_public_items
+- commits:
+    - body: null
+- commits:
+    - hash: 6b03af7cca426b568d7f033f3a1115486d3445d6
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Allow clippy::module_name_repetitions
+- commits:
+    - body: null
+- commits:
+    - hash: acbc5fbea1e647e1d6d9e603e71b57eabebfde5d
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Reverse if negation comparison
+- commits:
+    - body: null
+- commits:
+    - hash: a0172296acf5c689bd8042ee315fce6a401a2822
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use `expect` for hex number write in string instead of silently ignoring
+- commits:
+    - body: null
+- commits:
+    - hash: 4101ddbce0774d120dc7a41cf3d8a0b0fefd7a0a
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Simplify generate_random_buf
+- commits:
+    - body: null
+- commits:
+    - hash: 2761394708c592616d6d908bb2e889944c99b904
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Allow clippy::blanket_clippy_restriction_lints
+- commits:
+    - body: null
+- version: 0.2.8
+- date: 2022-08-23T11:06:00Z
+- commits:
+    - hash: 5998f2082762cba78f7dca9d0b478fbe0d5f0644
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use Rust 2021 Edition
+- commits:
+    - body: Also remove non-needed leftover packages from Cargo.toml
+- version: 0.2.7
+- date: 2022-08-18T13:41:44Z
+- commits:
+    - hash: 4f28827fc9d590f27b2949f3c3a3f8894a70764b
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use name and email in package.authors in Cargo.toml
+- commits:
+    - body: "Closes #16"
+- version: 0.2.6
+- date: 2022-08-18T13:27:59Z
+- commits:
+    - hash: 752173842faf7407294ee5b789a7b3295c2229be
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Add package.repository in Cargo.toml
+- commits:
+    - body: null
+- version: 0.2.5
+- date: 2022-08-18T12:45:42Z
+- commits:
+    - hash: 097614edcc4fa5909a68b9075340b631d99544ed
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Restructure write entry logging
+- commits:
+    - body: null
+- version: 0.2.4
+- date: 2022-08-18T12:21:36Z
+- commits:
+    - hash: 60f7777584a6def799fd0a24be0abbe44c8fc1ba
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Add debug CLI argument
+- commits:
+    - body: null
+- version: 0.2.3
+- date: 2022-08-13T11:56:00Z
+- commits:
+    - hash: 14bbdbae8f07de2991359df950dc7d3f6701da92
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Transition to clap v3
+- commits:
+    - body: Fix along the way `--mode` on write not working.
+- version: 0.2.2
+- date: 2022-08-10T16:05:41Z
+- commits:
+    - hash: 8b549ad3f821a42473a23c0892e746e9a8808b64
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Simpler log lines
+- commits:
+    - body: null
+- version: 0.2.1
+- date: 2022-08-10T13:05:42Z
+- commits:
+    - hash: 5f71690b77640154a6312740240c85589bca4b12
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Simpler log formatting
+- commits:
+    - body: null
+- version: 0.2.0
+- date: 2022-08-09T13:39:14Z
+- commits:
+    - hash: e46a32b38f4aeb91ac53d49869e2e87637ae40ef
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Update dependencies
+- commits:
+    - body: null
+- commits:
+    - hash: 4e4f0649ea50f6791db65eea7aba0087b7ed4878
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use AsRef<Path> on the crate's public API only
+- commits:
+    - body: Update path-absolutize to v3 as well.
+- commits:
+    - hash: 2e83b076b9efb5029c79e9a89d4b01e542c3ea71
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Fix a format_push_string clippy lint
+- commits:
+    - body: null
+- version: 0.1.10
+- date: 2022-06-29T13:36:44Z
+- commits:
+    - hash: 3ecf784f524d0ae4e6b1c2acb50e629860901519
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Do not use custom release profile for CI builds
+- commits:
+    - body: Removing the custom profile as it confuses the yocto builds.
+- version: 0.1.9
+- date: 2022-06-22T14:14:41Z
+- commits:
+    - hash: 590dfdd201012e823e1a97de1592a58aac16f4ee
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use a separate release profile for CI static builds
+- commits:
+    - body: null
+- version: 0.1.8
+- date: 2022-06-22T13:20:16Z
+- commits:
+    - hash: 5449e857f7fb686775c0a4ec2d5b0b3f861e5fda
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Cleanup files in the root folder
+- commits:
+    - body: null
+- version: 0.1.7
+- date: 2022-06-22T12:05:55Z
+- commits:
+    - hash: 0ba66e23766f781706a2f4561ed4fb271eb75360
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Change balena project type to rust-public-crate
+- commits:
+    - body: null
+- version: 0.1.6
+- date: 2022-06-20T16:40:24Z
+- commits:
+    - hash: d021dd204b2c64b433c348a0743d90120487781e
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Remove panic="abort" as it breaks meta-rust
+- commits:
+    - body: null
+- version: 0.1.5
+- date: 2022-06-10T18:08:14Z
+- commits:
+    - hash: d0578a1de6a53726dcd06806d19feaf66484d657
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Refine when to trigger builds
+- commits:
+    - body: null
+- version: 0.1.4
+- date: 2022-06-10T16:47:00Z
+- commits:
+    - hash: 237853a6e9b8b502fdeb1ec793002ef6109884c8
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Create a GitHub workflow
+- commits:
+    - body: null
+- commits:
+    - hash: 83a4711979c8a087924d8ff7a5badef665ba3297
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use Deploy to Balena action
+- commits:
+    - body: null
+- commits:
+    - hash: d43a23686684980d3bebeefc070c3b156a33c1e4
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use actions-rs for cross-compilation
+- commits:
+    - body: null
+- commits:
+    - hash: 046a5169da6bf8fac71710e499abd2146e10741b
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Full list of supported targets
+- commits:
+    - body: null
+- commits:
+    - hash: e2b837265f7249022b2656e45f20287240d4e4e3
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Do not use a fail fast strategy
+- commits:
+    - body: null
+- commits:
+    - hash: 346ac171d4dcbd9eca1cfc88354e21f4a8271320
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Fix Rust toolchain names
+- commits:
+    - body: null
+- commits:
+    - hash: 0948842ecd4dcbfc6fc917fd304deb405963c84d
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Rename armv6 toolchain
+- commits:
+    - body: null
+- commits:
+    - hash: d3e11de7d9c097ede3673f8a355beafa3e2432e2
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: List all files
+- commits:
+    - body: null
+- commits:
+    - hash: 22b49e94c07ff5dfd6eb80c4dfe8cd7fe3525d0c
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Compress binaries
+- commits:
+    - body: null
+- commits:
+    - hash: 9ebaa6690ab324faf99f915181d6b106ee8efe5d
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: LLVM strip
+- commits:
+    - body: null
+- commits:
+    - hash: 1e4808c250320ac278fcdf093e4a5e4dc68f2e49
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Upload to file.io for testing
+- commits:
+    - body: null
+- commits:
+    - hash: 00d2d2f005a2b0cd505eb78fb8eb55ce68576d25
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Use actions/upload-artifact for build binaries
+- commits:
+    - body: null
+- commits:
+    - hash: 90f65624e606e749ad8e5786047ef087c3cbbe42
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Comment out the UPX step temporary
+- commits:
+    - body: null
+- commits:
+    - hash: 2c15027e314be384cbd9387c154f582eeea4c5bd
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Clean up the CI definitions
+- commits:
+    - body: null
+- commits:
+    - hash: e47d6c4a08b6bce7bf49efc5c554fa0f1c1c2da1
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Optimize for size
+- commits:
+    - body: null
+- commits:
+    - hash: aab5f9e9807270404465de478e6d6555a30d0890
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Enable LTO
+- commits:
+    - body: null
+- commits:
+    - hash: 866343b1eaf32f8c3f0e0b3dac5d944bdeb484e6
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Set panic="abort"
+- commits:
+    - body: null
+- commits:
+    - hash: 655cd670dff13f9fe9b616b5255ee31f97af7b3e
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Set codegen units to 1
+- commits:
+    - body: null
+- commits:
+    - hash: 40da0ba05f07a34b69e2215d9a3cdb3d00db5455
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Create a tar.gz from artifacts
+- commits:
+    - body: null
+- commits:
+    - hash: 24786e58a6aa2c2a00238031b06329305f68d53e
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Deploy release job
+- commits:
+    - body: null
+- commits:
+    - hash: 943c268451878aaa8a62cb38a4b96cea24b11c22
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Release the binaries
+- commits:
+    - body: null
+- version: 0.1.3
+- date: 2022-05-13T10:21:18Z
+- commits:
+    - hash: bf203944973c7e2f89220f30620950f956b2e73a
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: README update
+- commits:
+    - body: null
+- version: 0.1.2
+- date: 2022-05-13T09:55:17Z
+- commits:
+    - hash: 39f3b44c43ff84e884bca90c6062a8922e073029
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Copy subcommand
+- commits:
+    - body: null
+- version: 0.1.1
+- date: 2022-05-13T08:18:18Z
+- commits:
+    - hash: e87bb2e7bf2da1f4c0bedbae091f3097dd7fb3a0
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Write operation receives content from stdin
+- commits:
+    - body: null
+- version: 0.1.0
+- date: 2022-05-12T14:54:42Z
+- commits:
+    - hash: c08e34f1a61607962fed912e1e487652d3b704be
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: minor
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Read operation working on top of bytes instead of string
+- commits:
+    - body: null
+- version: 0.0.10
+- date: 2022-05-11T20:02:43Z
+- commits:
+    - hash: 21c118dcd490e3444e46cecd8366518bbc4771c0
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Compatibility with Rust 1.33
+- commits:
+    - body: null
+- version: 0.0.9
+- date: 2022-05-11T09:38:58Z
+- commits:
+    - hash: 8a19e9dcd814a491085cd86b3d9bf1c3c8ffb613
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Compatibility with Rust 1.36
+- commits:
+    - body: null
+- version: 0.0.8
+- date: 2022-05-11T07:39:50Z
+- commits:
+    - hash: 4a543a6d15ecdde6423a5c103b771f89f56f8221
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Downgrade clap to 2.34
+- commits:
+    - body: Needed for compilation with Rust 1.36
+- version: 0.0.7
+- date: 2022-05-10T18:39:40Z
+- commits:
+    - hash: 0f91a280196ad98fc7d72149148dfe440e948002
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Regenerate Cargo.lock with older cargo version
+- commits:
+    - body: null
+- version: 0.0.6
+- date: 2022-05-10T12:15:54Z
+- commits:
+    - hash: 0fee247c1813c3891babfd6f34ec5e199cdbf400
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Switch to edition 2018 to support Rust v1.54.0
+- commits:
+    - body: null
+- version: 0.0.5
+- date: 2022-04-19T09:11:15Z
+- commits:
+    - hash: 8401b11ec05f9d6a6880c6aaf506210d92629156
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Update dependencies and Cargo.toml description
+- commits:
+    - body: null
+- version: 0.0.4
+- date: 2022-04-19T08:46:33Z
+- commits:
+    - hash: 1aa5b2c9a4687b68b550e7f5e65896c0d9a3bdfc
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Update README with multiline examples
+- commits:
+    - body: null
+- version: 0.0.3
+- date: 2022-04-19T08:07:57Z
+- commits:
+    - hash: 2b45ef51a93bd7c3580a2acc5af906c2cd5a3a67
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Include a README with usage and short introduction
+- commits:
+    - body: null
+- version: 0.0.2
+- date: 2022-04-19T07:59:26Z
+- commits:
+    - hash: 1a8fc7f44e20721e2ffc8054556c8e1ac4d59fa5
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        change-type: patch
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Add balena.yml
+- commits:
+    - body: null
+- commits:
+    - hash: 4cc942f28bacc40e02daac0dbe6cad2eb2f35729
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: All code moved into root src folder
+- commits:
+    - body: null
+- commits:
+    - hash: 6aada576c8023a0267807d0038f70ed42393a9ab
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Refresh Cargo.lock
+- commits:
+    - body: null
+- commits:
+    - hash: 5a83ad5442e672176880444a227593ade34365ac
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Fix needless borrow clippy warning
+- commits:
+    - body: null
+- commits:
+    - hash: 2509402665a39e9233685d4ceed0d9c1611fbb25
+- commits:
+    - author: Zahari Petkov
+- commits:
+    - footers:
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+- commits:
+    - subject: Fix clippy "used `assert_eq!` with a literal bool"
+- commits:
+    - body: null
