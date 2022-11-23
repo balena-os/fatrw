@@ -10,7 +10,8 @@ on:
 jobs:
   flowzone:
     name: Flowzone
-    uses: product-os/flowzone/.github/workflows/flowzone.yml@master
+    # REMOVE WHEN READY
+    uses: product-os/flowzone/.github/workflows/flowzone.yml@early-release-notes
     secrets: inherit
     with:
       rust_binaries: true
