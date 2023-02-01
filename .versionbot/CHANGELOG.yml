@@ -1,4 +1,18 @@
 - commits:
+    - subject: Fix clippy warnings introduced in Rust 1.67
+      hash: 79d8a056cc9109b21a5987ae8edb2376417f6fb1
+      body: |
+        Done automatically with `cargo clippy --fix`
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+  version: 0.2.15
+  title: ""
+  date: 2023-02-01T10:13:14.352Z
+- commits:
     - subject: Use flowzone instead of custom CI configuration
       hash: 468a61f25a259549126ab6deceae853e76d8917d
       body: ""
