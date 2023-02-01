@@ -7,7 +7,7 @@ pub fn generate_random_string() -> String {
     let mut string = String::new();
     let buf = generate_random_buf();
     for num in &buf {
-        write!(string, "{:02x}", num).expect("Failed to write hex number");
+        write!(string, "{num:02x}").expect("Failed to write hex number");
     }
     string
 }

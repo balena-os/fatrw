@@ -29,7 +29,7 @@ fn process_md5sums(path: &Path) -> Option<Vec<u8>> {
     let parent = get_parent_as_string(path).ok()?;
     debug!("Parent directory {}", parent);
 
-    let pattern = format!("{}/.{}.*.*.md5sum", parent, file_name);
+    let pattern = format!("{parent}/.{file_name}.*.*.md5sum");
     debug!("Glob pattern {}", pattern);
 
     let mut content = None;

@@ -35,12 +35,12 @@ fn read_md5sum() {
 
     let checksum = md5sum(test_md5sum_content);
 
-    let md5sum_name = format!(".test.txt.1234abcd.{}.md5sum", checksum);
-    let md5sum_path = temp.join(&md5sum_name);
+    let md5sum_name = format!(".test.txt.1234abcd.{checksum}.md5sum");
+    let md5sum_path = temp.join(md5sum_name);
     create_file(&md5sum_path, test_md5sum_content);
 
-    let tmp_name = format!(".test.txt.1234abcd.{}.tmp", checksum);
-    let tmp_path = temp.join(&tmp_name);
+    let tmp_name = format!(".test.txt.1234abcd.{checksum}.tmp");
+    let tmp_path = temp.join(tmp_name);
     create_file(&tmp_path, test_md5sum_content);
 
     let content = read_file(&target).unwrap();
@@ -62,12 +62,12 @@ fn read_multiple_md5sums() {
 
     let checksum = md5sum(test_content);
 
-    let md5sum_name_1 = format!(".test.txt.11111111.{}.md5sum", checksum);
-    let md5sum_path_1 = temp.join(&md5sum_name_1);
+    let md5sum_name_1 = format!(".test.txt.11111111.{checksum}.md5sum");
+    let md5sum_path_1 = temp.join(md5sum_name_1);
     create_file(&md5sum_path_1, test_content);
 
-    let md5sum_name_2 = format!(".test.txt.22222222.{}.md5sum", checksum);
-    let md5sum_path_2 = temp.join(&md5sum_name_2);
+    let md5sum_name_2 = format!(".test.txt.22222222.{checksum}.md5sum");
+    let md5sum_path_2 = temp.join(md5sum_name_2);
     create_file(&md5sum_path_2, test_content);
 
     let target = temp.join("test.txt");
