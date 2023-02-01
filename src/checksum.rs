@@ -29,7 +29,7 @@ pub fn generate_md5sum_path(path: &Path, checksum: &str) -> Result<PathBuf> {
 
     let target_name = get_file_name(path)?;
 
-    let md5sum_name = format!(".{}.{}.{}.md5sum", target_name, random_suffix, checksum);
+    let md5sum_name = format!(".{target_name}.{random_suffix}.{checksum}.md5sum");
     debug!("Checksum file {}", md5sum_name);
 
     let md5sum_path = path.with_file_name(md5sum_name);
