@@ -1,4 +1,15 @@
 - commits:
+    - subject: Fix flowzone Rust toolchain to 1.67
+      hash: 0143d61d6a53e6df755ecb85157d241344ebbd95
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+      author: Felipe Lalanne
+  version: 0.2.16
+  title: ""
+  date: 2023-02-02T10:23:26.228Z
+- commits:
     - subject: Fix clippy warnings introduced in Rust 1.67
       hash: 79d8a056cc9109b21a5987ae8edb2376417f6fb1
       body: |
