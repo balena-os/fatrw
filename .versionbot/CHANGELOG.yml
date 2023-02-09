@@ -1,4 +1,18 @@
 - commits:
+    - subject: Fix repo.yml to be proper yaml
+      hash: a60db27d256ff750f9d08eca31a35f6d030f9f16
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 0.2.18
+  title: ""
+  date: 2023-02-09T14:58:02.647Z
+- commits:
     - subject: Add repo yml to fix versionist errors
       hash: 3425ac31a609259fee2abe7d0305d6fc5d768ad6
       body: ""
