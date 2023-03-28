@@ -40,6 +40,8 @@ fn init_logging(cli: &Cli) {
 
     if cli.debug {
         builder.filter_level(log::LevelFilter::Debug);
+    } else {
+        builder.filter_level(log::LevelFilter::Info);
     }
 
     builder.init();
