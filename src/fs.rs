@@ -50,7 +50,11 @@ pub fn get_parent_as_string(path: &Path) -> Result<String> {
     Ok(parent.to_owned())
 }
 
-pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
+pub fn commit_md5sum_file(
+    md5sum_path: &Path,
+    path: &Path,
+    unsafe_fallback: bool,
+) -> Result<Vec<u8>> {
     debug!("Committing checksum file");
 
     let content = verify_checksum(md5sum_path)?;
@@ -58,7 +62,7 @@ pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
     let temp_path = md5sum_path.with_extension("tmp");
 
     if let Err(err) = clean_copy(md5sum_path, &temp_path) {
-        if is_storage_full_error(&err) {
+        if unsafe_fallback && is_storage_full_error(&err) {
             warn!(
                 "Using unsafe rename due to low space for {}",
                 path.display()

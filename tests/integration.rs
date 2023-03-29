@@ -17,7 +17,7 @@ fn read_target_only() {
     let target = temp.join("test.txt");
     create_file(&target, test_content);
 
-    let content = read_file(target).unwrap();
+    let content = read_file(target, false).unwrap();
 
     assert_eq!(test_content, content);
 }
@@ -43,7 +43,7 @@ fn read_md5sum() {
     let tmp_path = temp.join(tmp_name);
     create_file(&tmp_path, test_md5sum_content);
 
-    let content = read_file(&target).unwrap();
+    let content = read_file(&target, false).unwrap();
 
     let committed_content = read(&target).unwrap();
 
@@ -71,7 +71,7 @@ fn read_multiple_md5sums() {
     create_file(&md5sum_path_2, test_content);
 
     let target = temp.join("test.txt");
-    let content = read_file(&target).unwrap();
+    let content = read_file(&target, false).unwrap();
 
     let committed_content = read(&target).unwrap();
 

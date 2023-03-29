@@ -21,14 +21,14 @@ fn main() -> Result<()> {
         Command::Write { path, mode } => {
             let mut input = Vec::new();
             stdin().read_to_end(&mut input)?;
-            write_file(path, &input, mode_from_string(&mode)?)
+            write_file(path, &input, mode_from_string(&mode)?, cli.unsafe_fallback)
         }
         Command::Read { path } => {
-            let content = read_file(path)?;
+            let content = read_file(path, cli.unsafe_fallback)?;
             stdout().write_all(&content)?;
             Ok(())
         }
-        Command::Copy { source, dest } => copy_file(source, dest),
+        Command::Copy { source, dest } => copy_file(source, dest, cli.unsafe_fallback),
     }
 }
 
