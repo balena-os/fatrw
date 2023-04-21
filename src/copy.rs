@@ -8,7 +8,11 @@ use crate::fs::get_file_mode;
 use crate::read::read_file;
 use crate::write::write_file;
 
-pub fn copy_file<P: AsRef<Path>, Q: AsRef<Path>>(source: P, dest: Q) -> Result<()> {
+pub fn copy_file<P: AsRef<Path>, Q: AsRef<Path>>(
+    source: P,
+    dest: Q,
+    unsafe_fallback: bool,
+) -> Result<()> {
     debug!(
         "Copy {} {}",
         source.as_ref().display(),
@@ -17,5 +21,10 @@ pub fn copy_file<P: AsRef<Path>, Q: AsRef<Path>>(source: P, dest: Q) -> Result<(
 
     let mode = get_file_mode(source.as_ref()).ok();
 
-    write_file(dest, &read_file(source)?, mode)
+    write_file(
+        dest,
+        &read_file(source, unsafe_fallback)?,
+        mode,
+        unsafe_fallback,
+    )
 }

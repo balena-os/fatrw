@@ -1,9 +1,10 @@
 use anyhow::{anyhow, Context, Result};
-use log::debug;
+use log::{debug, warn};
 use path_absolutize::Absolutize;
 
 use alloc::borrow::Cow;
 use std::fs::{copy, metadata, read, remove_file, rename, File, OpenOptions};
+use std::io::Result as IOResult;
 use std::io::Write;
 use std::os::unix::fs::OpenOptionsExt;
 use std::os::unix::fs::PermissionsExt;
@@ -49,18 +50,42 @@ pub fn get_parent_as_string(path: &Path) -> Result<String> {
     Ok(parent.to_owned())
 }
 
-pub fn commit_md5sum_file(md5sum_path: &Path, path: &Path) -> Result<Vec<u8>> {
+pub fn commit_md5sum_file(
+    md5sum_path: &Path,
+    path: &Path,
+    unsafe_fallback: bool,
+) -> Result<Vec<u8>> {
     debug!("Committing checksum file");
 
     let content = verify_checksum(md5sum_path)?;
 
     let temp_path = md5sum_path.with_extension("tmp");
 
-    copy(md5sum_path, &temp_path).context(format!(
-        "Failed to copy to a temporary location {} -> {}",
-        md5sum_path.display(),
-        temp_path.display()
-    ))?;
+    if let Err(err) = clean_copy(md5sum_path, &temp_path) {
+        if unsafe_fallback && is_storage_full_error(&err) {
+            warn!(
+                "Using unsafe rename due to low space for {}",
+                path.display()
+            );
+
+            rename(md5sum_path, path).context(format!(
+                "Failed to rename md5sum file to target file {} -> {}",
+                md5sum_path.display(),
+                path.display()
+            ))?;
+
+            fsync_parent_dir(path)?;
+
+            return Ok(content);
+        }
+
+        return Err(err).context(format!(
+            "Failed to copy to a temporary location {} -> {}",
+            md5sum_path.display(),
+            temp_path.display()
+        ))?;
+    }
+
     debug!(
         "Copied {} {}",
         file_name_display(md5sum_path),
@@ -120,7 +145,17 @@ pub fn fsync_parent_dir(path: &Path) -> Result<()> {
     Ok(())
 }
 
-pub fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
+pub fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> IOResult<()> {
+    if let Err(e) = create_file_unclean(path, mode, content) {
+        // Remove any left over file content in case of failure
+        remove_file(path).ok();
+        return Err(e);
+    }
+
+    Ok(())
+}
+
+fn create_file_unclean(path: &Path, mode: Option<u32>, content: &[u8]) -> IOResult<()> {
     let mut file = open_with_mode(path, mode)?;
 
     file.write_all(content)?;
@@ -131,7 +166,18 @@ pub fn create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()>
     Ok(())
 }
 
-fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
+pub fn clean_copy(from: &Path, to: &Path) -> IOResult<u64> {
+    match copy(from, to) {
+        Ok(res) => Ok(res),
+        Err(err) => {
+            // Remove any left over file content in case of failure
+            remove_file(to).ok();
+            Err(err)
+        }
+    }
+}
+
+fn open_with_mode(path: &Path, mode: Option<u32>) -> IOResult<File> {
     let mut open_options = OpenOptions::new();
 
     open_options.create(true).write(true);
@@ -140,9 +186,14 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
         open_options.mode(octal_mode);
     }
 
-    Ok(open_options.open(path)?)
+    open_options.open(path)
 }
 
 pub fn file_name_display(path: &Path) -> Cow<'_, str> {
     path.file_name().unwrap_or_default().to_string_lossy()
+}
+
+pub fn is_storage_full_error(err: &std::io::Error) -> bool {
+    // TODO: Use io::ErrorKind::StorageFull when stabilized
+    err.raw_os_error() == Some(28_i32)
 }

@@ -13,6 +13,10 @@ pub struct Cli {
     /// Print debug information
     #[clap(short, long)]
     pub debug: bool,
+
+    /// Allow fallback to unsafe write/rename
+    #[clap(short, long = "unsafe")]
+    pub unsafe_fallback: bool,
 }
 
 #[derive(Debug, Subcommand)]
