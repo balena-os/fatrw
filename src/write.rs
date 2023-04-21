@@ -5,7 +5,8 @@ use log::{debug, warn};
 use std::path::Path;
 
 use crate::checksum::{commit_md5sum_file, generate_md5sum_path, md5sum};
-use crate::fs::{as_absolute, create_file, fsync_parent_dir, is_storage_full_error};
+use crate::fs::{create_file, fsync_parent_dir, is_storage_full_error};
+use crate::path::as_absolute;
 
 pub fn write_file<P: AsRef<Path>>(
     path: P,

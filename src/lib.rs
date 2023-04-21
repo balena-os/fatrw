@@ -31,6 +31,7 @@ extern crate alloc;
 mod checksum;
 pub mod copy;
 mod fs;
+mod path;
 mod random;
 pub mod read;
 pub mod write;

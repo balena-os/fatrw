@@ -1,8 +1,6 @@
 use anyhow::{anyhow, Context, Result};
 use log::debug;
-use path_absolutize::Absolutize;
 
-use alloc::borrow::Cow;
 use std::fs::{metadata, File, OpenOptions};
 use std::io::Result as IOResult;
 use std::io::Write;
@@ -12,42 +10,12 @@ use std::path::Path;
 
 pub use std::fs::{copy, read, remove_file, rename};
 
-pub fn as_absolute(path: &Path) -> Result<Cow<'_, Path>> {
-    path.absolutize()
-        .context(format!("Failed to absolutize {}", path.display()))
-}
-
-pub fn get_file_name(path: &Path) -> Result<String> {
-    let file_name_os = path
-        .file_name()
-        .ok_or_else(|| anyhow!("No file name in path {}", path.display()))?;
-
-    let file_name = file_name_os
-        .to_str()
-        .ok_or_else(|| anyhow!("File name is not a valid UTF-8 string {:?}", file_name_os))?;
-
-    Ok(file_name.to_owned())
-}
+use crate::path::file_name_display;
 
 pub fn get_file_mode(path: &Path) -> Result<u32> {
     let meta = metadata(path)?;
     let perm = meta.permissions();
     Ok(perm.mode())
-}
-
-pub fn get_parent_as_string(path: &Path) -> Result<String> {
-    let parent_path = path
-        .parent()
-        .ok_or_else(|| anyhow!("No parent in path {}", path.display()))?;
-
-    let parent = parent_path.to_str().ok_or_else(|| {
-        anyhow!(
-            "Parent is not a valid UTF-8 string {}",
-            parent_path.display()
-        )
-    })?;
-
-    Ok(parent.to_owned())
 }
 
 pub fn fsync_parent_dir(path: &Path) -> Result<()> {
@@ -106,10 +74,6 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> IOResult<File> {
     }
 
     open_options.open(path)
-}
-
-pub fn file_name_display(path: &Path) -> Cow<'_, str> {
-    path.file_name().unwrap_or_default().to_string_lossy()
 }
 
 pub fn is_storage_full_error(err: &std::io::Error) -> bool {

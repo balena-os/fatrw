@@ -6,7 +6,7 @@ use std::fs::{read, remove_file};
 use std::path::Path;
 
 use crate::checksum::commit_md5sum_file;
-use crate::fs::{as_absolute, file_name_display, get_file_name, get_parent_as_string};
+use crate::path::{as_absolute, file_name_display, get_file_name, get_parent_as_string};
 
 pub fn read_file<P: AsRef<Path>>(path: P, unsafe_fallback: bool) -> Result<Vec<u8>> {
     debug!("Read {}", path.as_ref().display());

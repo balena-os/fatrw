@@ -5,10 +5,8 @@ use regex::Regex;
 
 use std::path::{Path, PathBuf};
 
-use crate::fs::{
-    clean_copy, file_name_display, fsync_parent_dir, get_file_name, is_storage_full_error, read,
-    remove_file, rename,
-};
+use crate::fs::{clean_copy, fsync_parent_dir, is_storage_full_error, read, remove_file, rename};
+use crate::path::{file_name_display, get_file_name};
 use crate::random::generate_random_string;
 
 pub fn md5sum(content: &[u8]) -> String {
