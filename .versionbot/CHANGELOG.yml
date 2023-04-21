@@ -1,4 +1,48 @@
 - commits:
+    - subject: Add --unsafe/-u CLI argument
+      hash: ec242337ed33ec0725b517cc80502d5dea57c47b
+      body: |
+        When unsafe fallback is enabled and operation fails because of out
+        of space error, fatrw will fallback to unsafe write/rename operations
+        that do not require extra space.
+
+        The default behavior will keep the safe behavior of fatrw, which means
+        that if an operation fails because of out of space error, fatrw will
+        not fallback to unsafe behavior and the operation will not succeed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+    - subject: Handle low disk space scenarios by resorting to unsafe write/rename
+      hash: f2a6280466bcab9c5cc14f9283ca38c1b4605bab
+      body: >
+        Since the safe operations take double the size of the target file as extra
+
+        space, if there is no enough space, they fail with `No space left on device
+
+        (os error 28)`.
+
+
+        In those situations when a copy or write operation fails with no space error,
+
+        we take a shortcut and resort to the unsafe counter parts of those operations.
+
+
+        Closes #120
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.20
+  title: ""
+  date: 2023-04-21T10:35:14.553Z
+- commits:
     - subject: Switch repo type to `rust-module` to enable auto cargo versioning
       hash: 944b61ffa7ff8c47f3e0438e468d8e1f003448b6
       body: ""
