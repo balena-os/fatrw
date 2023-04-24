@@ -5,7 +5,7 @@ use regex::Regex;
 
 use std::path::{Path, PathBuf};
 
-use crate::fs::{is_storage_full_error, read, safe_copy, safe_remove_file, safe_rename};
+use crate::fs::{is_storage_full_error, read, safe_copy, safe_remove, safe_rename};
 use crate::path::{file_name_display, get_file_name};
 use crate::random::generate_random_string;
 
@@ -89,7 +89,7 @@ pub fn commit_md5sum_file(
         file_name_display(path)
     );
 
-    safe_remove_file(md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
+    safe_remove(md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
     debug!("Removed {}", file_name_display(md5sum_path));
 
     Ok(content)

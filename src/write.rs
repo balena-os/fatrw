@@ -5,7 +5,7 @@ use log::{debug, warn};
 use std::path::Path;
 
 use crate::checksum::{commit_md5sum_file, generate_md5sum_path, md5sum};
-use crate::fs::{is_storage_full_error, safe_create_file};
+use crate::fs::{is_storage_full_error, safe_create};
 use crate::path::as_absolute;
 
 pub fn write_file<P: AsRef<Path>>(
@@ -28,14 +28,14 @@ pub fn write_file<P: AsRef<Path>>(
 
     let md5sum_path = generate_md5sum_path(&abs_path, &checksum)?;
 
-    if let Err(err) = safe_create_file(&md5sum_path, mode, content) {
+    if let Err(err) = safe_create(&md5sum_path, mode, content) {
         if unsafe_fallback && is_storage_full_error(&err) {
             warn!(
                 "Using unsafe write due to low space for {}",
                 abs_path.display()
             );
 
-            safe_create_file(&abs_path, mode, content)
+            safe_create(&abs_path, mode, content)
                 .context(format!("Unsafe write filed for {}", abs_path.display()))?;
 
             return Ok(());

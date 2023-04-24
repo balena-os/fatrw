@@ -22,9 +22,9 @@ pub fn get_file_mode(path: &Path) -> Result<u32> {
 ///
 /// Invokes the `unclean` version of the function and removes any left over file content
 /// in case of failure
-pub fn safe_create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
-    if let Err(e) = safe_create_file_unclean(path, mode, content) {
-        safe_remove_file(path).ok();
+pub fn safe_create(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
+    if let Err(e) = safe_create_unclean(path, mode, content) {
+        safe_remove(path).ok();
         return Err(e);
     }
 
@@ -37,7 +37,7 @@ pub fn safe_create_file(path: &Path, mode: Option<u32>, content: &[u8]) -> Resul
 ///
 /// The `unclean` version of the function may leave incomplete left over file in case
 /// of failure.
-fn safe_create_file_unclean(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
+fn safe_create_unclean(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
     let mut file = open_with_mode(path, mode)?;
 
     file.write_all(content)?;
@@ -58,7 +58,7 @@ pub fn safe_copy(from: &Path, to: &Path) -> Result<()> {
     match safe_copy_unclean(from, to) {
         Ok(_) => Ok(()),
         Err(err) => {
-            safe_remove_file(to).ok();
+            safe_remove(to).ok();
             Err(err).context("Failed to copy file")
         }
     }
@@ -81,7 +81,7 @@ fn safe_copy_unclean(from: &Path, to: &Path) -> Result<u64> {
 /// Removes a file
 ///
 /// The parent dir is fsynced.
-pub fn safe_remove_file(path: &Path) -> Result<()> {
+pub fn safe_remove(path: &Path) -> Result<()> {
     remove_file(path)?;
 
     fsync_parent_dir(path)?;
