@@ -146,9 +146,6 @@ fn open_with_mode(path: &Path, mode: Option<u32>) -> Result<File> {
 /// This is `No space left on device (os error 28)` error.
 pub fn is_storage_full_error(err: &anyhow::Error) -> bool {
     // TODO: Use io::ErrorKind::StorageFull when stabilized
-    if let Some(e) = err.downcast_ref::<std::io::Error>() {
-        e.raw_os_error() == Some(28_i32)
-    } else {
-        false
-    }
+    err.downcast_ref::<std::io::Error>()
+        .map_or(false, |e| e.raw_os_error() == Some(28_i32))
 }
