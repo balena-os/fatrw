@@ -23,11 +23,15 @@ pub fn fsync_parent_dir(path: &Path) -> Result<()> {
         .parent()
         .ok_or_else(|| anyhow!("Cannot evaluate the parent directory of {}", path.display()))?;
 
-    let f = File::open(parent_dir)
-        .context(format!("Failed to open directory {}", parent_dir.display()))?;
+    fsync_path(parent_dir)
+}
+
+fn fsync_path(path: &Path) -> Result<()> {
+    let f = File::open(path).context(format!("Failed to open path {}", path.display()))?;
     f.sync_all()
-        .context(format!("Failed to sync directory {}", parent_dir.display()))?;
-    debug!("Dir fsynced {}", parent_dir.display());
+        .context(format!("Failed to sync path {}", path.display()))?;
+
+    debug!("Fsynced {}", path.display());
 
     Ok(())
 }
