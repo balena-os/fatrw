@@ -5,7 +5,7 @@ use regex::Regex;
 
 use std::path::{Path, PathBuf};
 
-use crate::fs::{clean_copy, fsync_parent_dir, is_storage_full_error, read, remove_file, rename};
+use crate::fs::{is_storage_full_error, read, safe_copy, safe_remove_file, safe_rename};
 use crate::path::{file_name_display, get_file_name};
 use crate::random::generate_random_string;
 
@@ -49,20 +49,18 @@ pub fn commit_md5sum_file(
 
     let temp_path = md5sum_path.with_extension("tmp");
 
-    if let Err(err) = clean_copy(md5sum_path, &temp_path) {
+    if let Err(err) = safe_copy(md5sum_path, &temp_path) {
         if unsafe_fallback && is_storage_full_error(&err) {
             warn!(
                 "Using unsafe rename due to low space for {}",
                 path.display()
             );
 
-            rename(md5sum_path, path).context(format!(
+            safe_rename(md5sum_path, path).context(format!(
                 "Failed to rename md5sum file to target file {} -> {}",
                 md5sum_path.display(),
                 path.display()
             ))?;
-
-            fsync_parent_dir(path)?;
 
             return Ok(content);
         }
@@ -80,7 +78,7 @@ pub fn commit_md5sum_file(
         file_name_display(&temp_path)
     );
 
-    rename(&temp_path, path).context(format!(
+    safe_rename(&temp_path, path).context(format!(
         "Failed to rename temporary file to target file {} -> {}",
         temp_path.display(),
         path.display()
@@ -91,12 +89,8 @@ pub fn commit_md5sum_file(
         file_name_display(path)
     );
 
-    fsync_parent_dir(path)?;
-
-    remove_file(md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
+    safe_remove_file(md5sum_path).context(format!("Failed to remove {}", md5sum_path.display()))?;
     debug!("Removed {}", file_name_display(md5sum_path));
-
-    fsync_parent_dir(path)?;
 
     Ok(content)
 }
