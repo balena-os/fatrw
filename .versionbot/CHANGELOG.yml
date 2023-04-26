@@ -1,4 +1,44 @@
 - commits:
+    - subject: Make a `safe` counterpart of each fs function
+      hash: b62a1bbbbb197c7862450f6461596e0a9d385def
+      body: >
+        All filesystem functions that need syncing are wrapped in a `safe`
+        counterpart
+
+        functions:  `safe_create_file`, `safe_copy`, `safe_remove_file` and `safe_rename`.
+
+
+        Each of the `safe` versions `fsync`s the target file and its parent directory.
+
+        This way no `fsync` is needed outside of those functions and thus `fsync`s cannot
+
+        be missed.
+
+
+        Additionally all `crate::fs` functions have now added docstrings.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+    - subject: Move commit_md5sum_file and verify_checksum to checksum.rs
+      hash: d2e4afed9a664ae10641b1690606aadf02e8f9f2
+      body: |
+        That is	a better logical place for those two functions and also
+        removes clutter from `fs.rs`.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.21
+  title: ""
+  date: 2023-04-26T11:20:02.240Z
+- commits:
     - subject: Add --unsafe/-u CLI argument
       hash: ec242337ed33ec0725b517cc80502d5dea57c47b
       body: |
@@ -19,7 +59,8 @@
     - subject: Handle low disk space scenarios by resorting to unsafe write/rename
       hash: f2a6280466bcab9c5cc14f9283ca38c1b4605bab
       body: >
-        Since the safe operations take double the size of the target file as extra
+        Since the safe operations take double the size of the target file as
+        extra
 
         space, if there is no enough space, they fail with `No space left on device
 
