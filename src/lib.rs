@@ -22,7 +22,8 @@
     clippy::expect_used,
     clippy::missing_inline_in_public_items,
     clippy::module_name_repetitions,
-    clippy::blanket_clippy_restriction_lints
+    clippy::blanket_clippy_restriction_lints,
+    clippy::pub_use
 )]
 
 extern crate alloc;
@@ -30,6 +31,7 @@ extern crate alloc;
 mod checksum;
 pub mod copy;
 mod fs;
+mod path;
 mod random;
 pub mod read;
 pub mod write;
