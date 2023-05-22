@@ -19,10 +19,7 @@ regex = "1"
 tempfile = "3"
 getrandom = "0.2"
 glob = "0.3"
-
-[dependencies.clap]
-version = "3"
-features = ["derive"]
+clap = {version = "4", features = ["derive"]}
 
 [profile.release]
 opt-level = "z"
