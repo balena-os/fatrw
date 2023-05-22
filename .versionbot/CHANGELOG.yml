@@ -1,4 +1,18 @@
 - commits:
+    - subject: Bump clap to v4
+      hash: c92d246a4bb0cf56088c79876fdcdce81df69be4
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.23
+  title: ""
+  date: 2023-05-22T10:33:41.604Z
+- commits:
     - subject: Bump env_logger to v0.10
       hash: cd324dfeb72239427cc67921deed371d81624437
       body: |
