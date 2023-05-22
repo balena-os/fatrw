@@ -23,7 +23,9 @@
     clippy::missing_inline_in_public_items,
     clippy::module_name_repetitions,
     clippy::blanket_clippy_restriction_lints,
-    clippy::pub_use
+    clippy::pub_use,
+    clippy::question_mark_used,
+    clippy::multiple_crate_versions
 )]
 
 extern crate alloc;
