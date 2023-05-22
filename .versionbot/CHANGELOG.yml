@@ -1,4 +1,19 @@
 - commits:
+    - subject: Bump env_logger to v0.10
+      hash: cd324dfeb72239427cc67921deed371d81624437
+      body: |
+        Also refresh Cargo.lock and update CI Rust to v1.69.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.22
+  title: ""
+  date: 2023-05-22T10:13:46.739Z
+- commits:
     - subject: Make a `safe` counterpart of each fs function
       hash: b62a1bbbbb197c7862450f6461596e0a9d385def
       body: >
