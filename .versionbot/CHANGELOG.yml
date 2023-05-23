@@ -1,4 +1,20 @@
 - commits:
+    - subject: Disable printing log level in debug mode
+      hash: 416ab07f8ec8438e2b92ece52b533a67fa280221
+      body: |
+        Log level is not really needed as in debug mode only debug messages are
+        being printed.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.24
+  title: ""
+  date: 2023-05-23T17:11:56.410Z
+- commits:
     - subject: Bump clap to v4
       hash: c92d246a4bb0cf56088c79876fdcdce81df69be4
       body: ""
