@@ -37,6 +37,7 @@ fn init_logging(cli: &Cli) {
 
     builder.format_timestamp(None);
     builder.format_target(false);
+    builder.format_level(false);
 
     if cli.debug {
         builder.filter_level(log::LevelFilter::Debug);
