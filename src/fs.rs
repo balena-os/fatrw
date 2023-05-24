@@ -45,7 +45,7 @@ fn safe_create_unclean(path: &Path, mode: Option<u32>, content: &[u8]) -> Result
     file.write_all(content)?;
     file.sync_all()?;
 
-    debug!("Created {}", file_name_display(path));
+    debug!("Fsync {}", path.display());
 
     fsync_parent_dir(path)?;
 
