@@ -206,7 +206,7 @@ dependencies = [
 
 [[package]]
 name = "fatrw"
-version = "0.2.24"
+version = "0.2.25"
 dependencies = [
  "anyhow",
  "clap",

@@ -1,4 +1,19 @@
 - commits:
+    - subject: Improve log messages ordering
+      hash: 77e42b199b8ff0b0ba8b791bb49287287ad00912
+      body: |
+        Fixed is ordering of logging fsyncs coming after other fs operations.
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.25
+  title: ""
+  date: 2023-05-24T08:27:11.171Z
+- commits:
     - subject: Disable printing log level in debug mode
       hash: 416ab07f8ec8438e2b92ece52b533a67fa280221
       body: |
