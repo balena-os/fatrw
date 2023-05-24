@@ -23,6 +23,8 @@ pub fn get_file_mode(path: &Path) -> Result<u32> {
 /// Invokes the `unclean` version of the function and removes any left over file content
 /// in case of failure
 pub fn safe_create(path: &Path, mode: Option<u32>, content: &[u8]) -> Result<()> {
+    debug!("Create {}", file_name_display(path));
+
     if let Err(e) = safe_create_unclean(path, mode, content) {
         safe_remove(path).ok();
         return Err(e);
@@ -55,6 +57,8 @@ fn safe_create_unclean(path: &Path, mode: Option<u32>, content: &[u8]) -> Result
 /// Invokes the `unclean` version of the function and removes any left over file content
 /// in case of failure
 pub fn safe_copy(from: &Path, to: &Path) -> Result<()> {
+    debug!("Copy {} {}", file_name_display(from), file_name_display(to));
+
     match safe_copy_unclean(from, to) {
         Ok(_) => Ok(()),
         Err(err) => {
@@ -82,6 +86,8 @@ fn safe_copy_unclean(from: &Path, to: &Path) -> Result<u64> {
 ///
 /// The parent dir is fsynced.
 pub fn safe_remove(path: &Path) -> Result<()> {
+    debug!("Remove {}", file_name_display(path));
+
     remove_file(path)?;
 
     fsync_parent_dir(path)?;
@@ -93,6 +99,12 @@ pub fn safe_remove(path: &Path) -> Result<()> {
 ///
 /// Both the file and its parent dir are fsynced.
 pub fn safe_rename(from: &Path, to: &Path) -> Result<()> {
+    debug!(
+        "Rename {} {}",
+        file_name_display(from),
+        file_name_display(to)
+    );
+
     rename(from, to)?;
 
     fsync_file_and_parent_dir(to)?;
@@ -119,11 +131,11 @@ fn fsync_parent_dir(path: &Path) -> Result<()> {
 
 /// Fsyncs a path that can be a file or directory
 fn fsync_path(path: &Path) -> Result<()> {
+    debug!("Fsync {}", path.display());
+
     let f = File::open(path).context(format!("Failed to open path {}", path.display()))?;
     f.sync_all()
         .context(format!("Failed to sync path {}", path.display()))?;
-
-    debug!("Fsynced {}", path.display());
 
     Ok(())
 }
