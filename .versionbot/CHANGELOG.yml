@@ -1,4 +1,18 @@
 - commits:
+    - subject: Remove duplicated log lines and add a missing one
+      hash: d098cb5e1fe1df316d613d7dc60025f72eb848a7
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.26
+  title: ""
+  date: 2023-05-24T11:12:30.661Z
+- commits:
     - subject: Improve log messages ordering
       hash: 77e42b199b8ff0b0ba8b791bb49287287ad00912
       body: |
