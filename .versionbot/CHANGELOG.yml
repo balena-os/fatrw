@@ -1,4 +1,18 @@
 - commits:
+    - subject: How It Works README section
+      hash: 1125e9e0ca129e2eda68ef21388f57c575346aa6
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.27
+  title: ""
+  date: 2023-06-12T12:40:57.101Z
+- commits:
     - subject: Remove duplicated log lines and add a missing one
       hash: d098cb5e1fe1df316d613d7dc60025f72eb848a7
       body: ""
