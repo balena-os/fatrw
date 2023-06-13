@@ -1,4 +1,18 @@
 - commits:
+    - subject: Formatting adjustments in How It Works README section
+      hash: dd876bfb43cbc2932afcd97ddb18539ede9b16b0
+      body: ""
+      footer:
+        Change-type: patch
+        change-type: patch
+        Signed-off-by: Zahari Petkov <zahari@balena.io>
+        signed-off-by: Zahari Petkov <zahari@balena.io>
+      author: Zahari Petkov
+      nested: []
+  version: 0.2.28
+  title: ""
+  date: 2023-06-13T07:19:03.949Z
+- commits:
     - subject: How It Works README section
       hash: 1125e9e0ca129e2eda68ef21388f57c575346aa6
       body: ""
