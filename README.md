@@ -93,21 +93,21 @@ $ echo "Sample content" | fatrw --debug write content.txt
 16  Fsync /test
 ```
 
-(3) Calculate the MD5 checksum of the provided content. In the example above, the content is `Sample content`, and its checksum is `e8f62ec15eff2ece315ee7e692ffa648`.
+`(3)` Calculate the MD5 checksum of the provided content. In the example above, the content is `Sample content`, and its checksum is `e8f62ec15eff2ece315ee7e692ffa648`.
 
-(4) Create a file with the given content in the same folder where the `content.txt` target file should be created. Include the checksum in the filename along with an 8-symbol random string. The random string is necessary to prevent race conditions in case multiple processes are writing the same file with identical content.
+`(4)` Create a file with the given content in the same folder where the `content.txt` target file should be created. Include the checksum in the filename along with an 8-symbol random string. The random string is necessary to prevent race conditions in case multiple processes are writing the same file with identical content.
 
-(5) When a file is created, issue an `fsync` on its file descriptor.
+`(5)` When a file is created, issue an `fsync` on its file descriptor.
 
-(6) Also trigger an `fsync` on the parent `/test` folder. According to the `fsync` man page: "Calling fsync() does not necessarily ensure that the entry in the directory containing the file has also reached disk. For that an explicit fsync() on a file descriptor for the directory is also needed."
+`(6)` Also trigger an `fsync` on the parent `/test` folder. According to the `fsync` man page: "Calling fsync() does not necessarily ensure that the entry in the directory containing the file has also reached disk. For that an explicit fsync() on a file descriptor for the directory is also needed."
 
 At this point, if a power cycle occurs before the target file is fully written, the file can be restored from the md5sum file. This is crucial for the operation of FATRW.
 
-(9) Copy the `md5sum` file to a `tmp` file, which will be later renamed to the target `content.txt` file in step (12).
+`(9)` Copy the `md5sum` file to a `tmp` file, which will be later renamed to the target `content.txt` file in step `(12)`.
 
-(15) Remove the `md5sum` file since, at this point, it is guaranteed that the target file has been successfully written to the disk.
+`(15)` Remove the `md5sum` file since, at this point, it is guaranteed that the target file has been successfully written to the disk.
 
-In the provided example, if a power cycle occurs during steps (12), (13), or (14), the `content.txt` file may end up damaged and truncated. However, at that point, it is guaranteed that the `md5sum` temporary file will exist next to it, and upon subsequent boot and read operations, the `content.txt` file will be properly restored:
+In the provided example, if a power cycle occurs during steps `(12)`, `(13)`, or `(14)`, the `content.txt` file may end up damaged and truncated. However, at that point, it is guaranteed that the `md5sum` temporary file will exist next to it, and upon subsequent boot and read operations, the `content.txt` file will be properly restored:
 
 ```text
 $ fatrw --debug read content.txt
@@ -130,16 +130,16 @@ $ fatrw --debug read content.txt
 Sample content
 ```
 
-(4) Check for the existence of `md5sum` files corresponding to the `content.txt` file.
+`(4)` Check for the existence of `md5sum` files corresponding to the `content.txt` file.
 
-(5) Found is an `md5sum` file indicating a previous abruptly terminated write of the `content.txt` file.
+`(5)` Found is an `md5sum` file indicating a previous abruptly terminated write of the `content.txt` file.
 
-(6) Initiate the process of restoring `content.txt` from the `md5sum` file.
+`(6)` Initiate the process of restoring `content.txt` from the `md5sum` file.
 
-(7) Verify the content of the `md5sum` file against the MD5 checksum stored as part of the filename of the checksum file.
+`(7)` Verify the content of the `md5sum` file against the MD5 checksum stored as part of the filename of the checksum file.
 
-(8) Copy the `md5sum` file to a `tmp` file that will be later renamed to the target `content.txt` file in step (11).
+`(8)` Copy the `md5sum` file to a `tmp` file that will be later renamed to the target `content.txt` file in step `(11)`.
 
-(14) Remove the `md5sum` file as, at this point, the `content.txt` file has been successfully restored.
+`(14)` Remove the `md5sum` file as, at this point, the `content.txt` file has been successfully restored.
 
 The content of the `content.txt` file can be returned successfully at the end.
